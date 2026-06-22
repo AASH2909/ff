@@ -1,9 +1,6 @@
-import type { CurrencyCode, ShiftStatus } from "@/domain";
-
-export type MoneyDto = {
-  amount: number;
-  currency: CurrencyCode;
-};
+import type { Shift, ShiftStatus } from "@/domain";
+import type { CorrelatedInputDto, MoneyDto } from "@/application/dtos/common-dtos";
+import { toMoneyDto } from "@/application/dtos/common-dtos";
 
 export type ShiftDto = {
   id: string;
@@ -16,7 +13,7 @@ export type ShiftDto = {
   closingCash: MoneyDto | null;
 };
 
-export type OpenShiftInputDto = {
+export type OpenShiftInputDto = CorrelatedInputDto & {
   tenantId: string;
   cashierId: string;
   openingCash: MoneyDto;
@@ -26,7 +23,7 @@ export type OpenShiftOutputDto = {
   shift: ShiftDto;
 };
 
-export type CloseShiftInputDto = {
+export type CloseShiftInputDto = CorrelatedInputDto & {
   tenantId: string;
   shiftId: string;
   closingCash: MoneyDto;
@@ -36,28 +33,17 @@ export type CloseShiftOutputDto = {
   shift: ShiftDto;
 };
 
-export function toShiftDto(shift: import("@/domain").Shift): ShiftDto {
+export function toShiftDto(shift: Shift): ShiftDto {
   const snapshot = shift.toSnapshot();
 
   return {
     id: snapshot.id,
     cashierId: snapshot.cashierId,
     status: snapshot.status,
-    openingCash: {
-      amount: snapshot.openingCash.amount,
-      currency: snapshot.openingCash.currency
-    },
-    expectedCash: {
-      amount: snapshot.openingCash.amount,
-      currency: snapshot.openingCash.currency
-    },
+    openingCash: toMoneyDto(snapshot.openingCash),
+    expectedCash: toMoneyDto(snapshot.openingCash),
     openedAt: snapshot.openedAt.toISOString(),
     closedAt: snapshot.closedAt?.toISOString() ?? null,
-    closingCash: snapshot.closingCash
-      ? {
-          amount: snapshot.closingCash.amount,
-          currency: snapshot.closingCash.currency
-        }
-      : null
+    closingCash: snapshot.closingCash ? toMoneyDto(snapshot.closingCash) : null
   };
 }

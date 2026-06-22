@@ -1,3 +1,4 @@
+export * from "@/application/use-cases/use-case";
 export * from "@/application/use-cases/add-order-item-use-case";
 export * from "@/application/use-cases/cancel-order-use-case";
 export * from "@/application/use-cases/create-order-use-case";

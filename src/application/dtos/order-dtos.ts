@@ -1,9 +1,6 @@
 import type { CurrencyCode, Order, OrderStatus, PaymentMethod, PaymentStatus } from "@/domain";
-
-export type MoneyDto = {
-  amount: number;
-  currency: CurrencyCode;
-};
+import type { CorrelatedInputDto, MoneyDto } from "@/application/dtos/common-dtos";
+import { toMoneyDto } from "@/application/dtos/common-dtos";
 
 export type OrderItemDto = {
   id: string;
@@ -30,7 +27,7 @@ export type OrderDto = {
   payment: PaymentDto | null;
 };
 
-export type CreateOrderInputDto = {
+export type CreateOrderInputDto = CorrelatedInputDto & {
   tenantId: string;
   currency?: CurrencyCode;
 };
@@ -39,7 +36,7 @@ export type CreateOrderOutputDto = {
   order: OrderDto;
 };
 
-export type AddOrderItemInputDto = {
+export type AddOrderItemInputDto = CorrelatedInputDto & {
   tenantId: string;
   orderId: string;
   productId: string;
@@ -50,7 +47,7 @@ export type AddOrderItemOutputDto = {
   order: OrderDto;
 };
 
-export type RemoveOrderItemInputDto = {
+export type RemoveOrderItemInputDto = CorrelatedInputDto & {
   tenantId: string;
   orderId: string;
   productId: string;
@@ -61,16 +58,17 @@ export type RemoveOrderItemOutputDto = {
   order: OrderDto;
 };
 
-export type CancelOrderInputDto = {
+export type CancelOrderInputDto = CorrelatedInputDto & {
   tenantId: string;
   orderId: string;
+  reason?: string;
 };
 
 export type CancelOrderOutputDto = {
   order: OrderDto;
 };
 
-export type PayOrderInputDto = {
+export type PayOrderInputDto = CorrelatedInputDto & {
   tenantId: string;
   orderId: string;
   paymentMethod: PaymentMethod;
@@ -90,28 +88,16 @@ export function toOrderDto(order: Order): OrderDto {
       id: item.id,
       productId: item.productId,
       name: item.name,
-      unitPrice: {
-        amount: item.unitPrice.amount,
-        currency: item.unitPrice.currency
-      },
+      unitPrice: toMoneyDto(item.unitPrice),
       quantity: item.quantity,
-      lineTotal: {
-        amount: item.lineTotal.amount,
-        currency: item.lineTotal.currency
-      }
+      lineTotal: toMoneyDto(item.lineTotal)
     })),
-    total: {
-      amount: snapshot.total.amount,
-      currency: snapshot.total.currency
-    },
+    total: toMoneyDto(snapshot.total),
     payment: snapshot.payment
       ? {
           id: snapshot.payment.id,
           orderId: snapshot.payment.orderId,
-          amount: {
-            amount: snapshot.payment.amount.amount,
-            currency: snapshot.payment.amount.currency
-          },
+          amount: toMoneyDto(snapshot.payment.amount),
           method: snapshot.payment.method,
           status: snapshot.payment.status
         }

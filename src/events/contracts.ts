@@ -1,5 +1,10 @@
 export const EVENT_NAMESPACE = "controlos";
-export const EVENT_SUBJECT_PREFIX = `${EVENT_NAMESPACE}.events`;
+export const EVENT_SCHEMA_VERSION = 1;
+export const EVENT_SUBJECT_PREFIX = `${EVENT_NAMESPACE}.events.v${EVENT_SCHEMA_VERSION}`;
+export const EVENT_STREAM_NAME = "CONTROL_OS_EVENTS";
+export const EVENT_STREAM_SUBJECT = `${EVENT_SUBJECT_PREFIX}.>`;
+export const DEAD_LETTER_SUBJECT_PREFIX = `${EVENT_NAMESPACE}.dlq.v${EVENT_SCHEMA_VERSION}`;
+export const INVALID_EVENT_DEAD_LETTER_SUBJECT = `${DEAD_LETTER_SUBJECT_PREFIX}.InvalidEvent`;
 
 export const EVENT_NAMES = [
   "OrderCreated",
@@ -17,6 +22,12 @@ export const EVENT_NAMES = [
 export type EventName = (typeof EVENT_NAMES)[number];
 
 export type CurrencyCode = "USD" | "UZS";
+export type OrderStatus = "draft" | "open" | "paid" | "cancelled" | "refunded";
+export type PaymentMethod = "cash" | "card" | "online";
+export type ShiftStatus = "open" | "closed";
+export type FraudSeverity = "low" | "medium" | "high" | "critical";
+export type ControlScoreType = "tenant" | "location" | "shift" | "employee" | "inventory";
+export type AISummaryType = "daily" | "shift" | "inventory" | "fraud" | "control-score";
 
 export type MonetaryValue = {
   amount: number;
@@ -26,7 +37,7 @@ export type MonetaryValue = {
 export type OrderCreatedPayload = {
   orderId: string;
   tenantId: string;
-  status: string;
+  status: OrderStatus;
   total: MonetaryValue;
   currency: CurrencyCode;
   createdAt: string;
@@ -36,7 +47,7 @@ export type OrderPaidPayload = {
   orderId: string;
   tenantId: string;
   amount: MonetaryValue;
-  paymentMethod: string;
+  paymentMethod: PaymentMethod;
   paidAt: string;
 };
 
@@ -83,8 +94,10 @@ export type FraudDetectedPayload = {
   incidentId: string;
   tenantId: string;
   orderId?: string;
+  employeeId?: string;
   detectedAt: string;
   riskScore: number;
+  severity: FraudSeverity;
   description: string;
 };
 
@@ -92,8 +105,9 @@ export type ControlScoreUpdatedPayload = {
   scoreId: string;
   tenantId: string;
   entityId: string;
-  scoreType: string;
+  scoreType: ControlScoreType;
   score: number;
+  previousScore?: number;
   updatedAt: string;
 };
 
@@ -101,7 +115,7 @@ export type AISummaryGeneratedPayload = {
   summaryId: string;
   tenantId: string;
   sourceId: string;
-  summaryType: string;
+  summaryType: AISummaryType;
   summary: string;
   generatedAt: string;
 };
@@ -129,27 +143,83 @@ export type DomainEvent<T extends EventName = EventName> = {
   correlationId?: string;
   causationId?: string;
   source?: string;
+  metadata?: Record<string, string | number | boolean | null>;
   payload: EventPayloadMap[T];
 };
 
-export type EventSubject<T extends EventName = EventName> = `${typeof EVENT_SUBJECT_PREFIX}.${T}`;
+export type EventSubject<T extends EventName = EventName> =
+  `${typeof EVENT_SUBJECT_PREFIX}.${T}`;
 
-export function eventSubject(eventName: EventName): string {
-  return `${EVENT_SUBJECT_PREFIX}.${eventName}`;
+export type DeadLetterSubject<T extends EventName = EventName> =
+  `${typeof DEAD_LETTER_SUBJECT_PREFIX}.${T}`;
+
+export type EventContract<T extends EventName = EventName> = {
+  eventName: T;
+  subject: EventSubject<T>;
+  aggregateType: string;
+  producer: string;
+  primaryConsumers: string[];
+  schema: JsonSchema;
+};
+
+export type JsonSchema = {
+  type?: string | string[];
+  properties?: Record<string, JsonSchema>;
+  required?: string[];
+  additionalProperties?: boolean | JsonSchema;
+  items?: JsonSchema;
+  enum?: readonly string[];
+  minimum?: number;
+  maximum?: number;
+  minLength?: number;
+  format?: string;
+  description?: string;
+  oneOf?: JsonSchema[];
+};
+
+const nonEmptyStringSchema: JsonSchema = {
+  type: "string",
+  minLength: 1,
+  description: "Non-empty string"
+};
+
+const dateTimeSchema: JsonSchema = {
+  type: "string",
+  format: "date-time"
+};
+
+const monetaryValueSchema: JsonSchema = {
+  type: "object",
+  properties: {
+    amount: { type: "integer", minimum: 0 },
+    currency: { type: "string", enum: ["USD", "UZS"] }
+  },
+  required: ["amount", "currency"],
+  additionalProperties: false
+};
+
+export function eventSubject<T extends EventName>(eventName: T): EventSubject<T> {
+  return `${EVENT_SUBJECT_PREFIX}.${eventName}` as EventSubject<T>;
 }
 
-export const EVENT_SCHEMA_VERSION = 1;
+export function deadLetterSubject<T extends EventName>(eventName: T): DeadLetterSubject<T> {
+  return `${DEAD_LETTER_SUBJECT_PREFIX}.${eventName}` as DeadLetterSubject<T>;
+}
 
-export const EVENT_SCHEMAS: { [K in EventName]: Record<string, unknown> } = {
+export function isEventName(value: unknown): value is EventName {
+  return typeof value === "string" && EVENT_NAMES.includes(value as EventName);
+}
+
+export const EVENT_SCHEMAS: { [K in EventName]: JsonSchema } = {
   OrderCreated: {
     type: "object",
     properties: {
-      tenantId: { type: "string" },
-      orderId: { type: "string" },
-      status: { type: "string" },
-      total: { type: "object" },
-      currency: { type: "string" },
-      createdAt: { type: "string", format: "date-time" }
+      tenantId: nonEmptyStringSchema,
+      orderId: nonEmptyStringSchema,
+      status: { type: "string", enum: ["draft", "open", "paid", "cancelled", "refunded"] },
+      total: monetaryValueSchema,
+      currency: { type: "string", enum: ["USD", "UZS"] },
+      createdAt: dateTimeSchema
     },
     required: ["tenantId", "orderId", "status", "total", "currency", "createdAt"],
     additionalProperties: false
@@ -157,11 +227,11 @@ export const EVENT_SCHEMAS: { [K in EventName]: Record<string, unknown> } = {
   OrderPaid: {
     type: "object",
     properties: {
-      tenantId: { type: "string" },
-      orderId: { type: "string" },
-      amount: { type: "object" },
-      paymentMethod: { type: "string" },
-      paidAt: { type: "string", format: "date-time" }
+      tenantId: nonEmptyStringSchema,
+      orderId: nonEmptyStringSchema,
+      amount: monetaryValueSchema,
+      paymentMethod: { type: "string", enum: ["cash", "card", "online"] },
+      paidAt: dateTimeSchema
     },
     required: ["tenantId", "orderId", "amount", "paymentMethod", "paidAt"],
     additionalProperties: false
@@ -169,9 +239,9 @@ export const EVENT_SCHEMAS: { [K in EventName]: Record<string, unknown> } = {
   OrderCancelled: {
     type: "object",
     properties: {
-      tenantId: { type: "string" },
-      orderId: { type: "string" },
-      cancelledAt: { type: "string", format: "date-time" },
+      tenantId: nonEmptyStringSchema,
+      orderId: nonEmptyStringSchema,
+      cancelledAt: dateTimeSchema,
       reason: { type: "string" }
     },
     required: ["tenantId", "orderId", "cancelledAt"],
@@ -180,11 +250,11 @@ export const EVENT_SCHEMAS: { [K in EventName]: Record<string, unknown> } = {
   ShiftOpened: {
     type: "object",
     properties: {
-      tenantId: { type: "string" },
-      shiftId: { type: "string" },
-      cashierId: { type: "string" },
-      openingCash: { type: "object" },
-      openedAt: { type: "string", format: "date-time" }
+      tenantId: nonEmptyStringSchema,
+      shiftId: nonEmptyStringSchema,
+      cashierId: nonEmptyStringSchema,
+      openingCash: monetaryValueSchema,
+      openedAt: dateTimeSchema
     },
     required: ["tenantId", "shiftId", "cashierId", "openingCash", "openedAt"],
     additionalProperties: false
@@ -192,10 +262,10 @@ export const EVENT_SCHEMAS: { [K in EventName]: Record<string, unknown> } = {
   ShiftClosed: {
     type: "object",
     properties: {
-      tenantId: { type: "string" },
-      shiftId: { type: "string" },
-      closingCash: { type: "object" },
-      closedAt: { type: "string", format: "date-time" }
+      tenantId: nonEmptyStringSchema,
+      shiftId: nonEmptyStringSchema,
+      closingCash: monetaryValueSchema,
+      closedAt: dateTimeSchema
     },
     required: ["tenantId", "shiftId", "closingCash", "closedAt"],
     additionalProperties: false
@@ -203,11 +273,11 @@ export const EVENT_SCHEMAS: { [K in EventName]: Record<string, unknown> } = {
   InventoryReceived: {
     type: "object",
     properties: {
-      tenantId: { type: "string" },
-      inventoryId: { type: "string" },
-      productId: { type: "string" },
-      quantity: { type: "number" },
-      receivedAt: { type: "string", format: "date-time" }
+      tenantId: nonEmptyStringSchema,
+      inventoryId: nonEmptyStringSchema,
+      productId: nonEmptyStringSchema,
+      quantity: { type: "integer", minimum: 1 },
+      receivedAt: dateTimeSchema
     },
     required: ["tenantId", "inventoryId", "productId", "quantity", "receivedAt"],
     additionalProperties: false
@@ -215,11 +285,11 @@ export const EVENT_SCHEMAS: { [K in EventName]: Record<string, unknown> } = {
   InventoryWrittenOff: {
     type: "object",
     properties: {
-      tenantId: { type: "string" },
-      inventoryId: { type: "string" },
-      productId: { type: "string" },
-      quantity: { type: "number" },
-      writtenOffAt: { type: "string", format: "date-time" },
+      tenantId: nonEmptyStringSchema,
+      inventoryId: nonEmptyStringSchema,
+      productId: nonEmptyStringSchema,
+      quantity: { type: "integer", minimum: 1 },
+      writtenOffAt: dateTimeSchema,
       reason: { type: "string" }
     },
     required: ["tenantId", "inventoryId", "productId", "quantity", "writtenOffAt"],
@@ -228,25 +298,31 @@ export const EVENT_SCHEMAS: { [K in EventName]: Record<string, unknown> } = {
   FraudDetected: {
     type: "object",
     properties: {
-      tenantId: { type: "string" },
-      incidentId: { type: "string" },
+      tenantId: nonEmptyStringSchema,
+      incidentId: nonEmptyStringSchema,
       orderId: { type: "string" },
-      detectedAt: { type: "string", format: "date-time" },
-      riskScore: { type: "number" },
-      description: { type: "string" }
+      employeeId: { type: "string" },
+      detectedAt: dateTimeSchema,
+      riskScore: { type: "number", minimum: 0, maximum: 100 },
+      severity: { type: "string", enum: ["low", "medium", "high", "critical"] },
+      description: nonEmptyStringSchema
     },
-    required: ["tenantId", "incidentId", "detectedAt", "riskScore", "description"],
+    required: ["tenantId", "incidentId", "detectedAt", "riskScore", "severity", "description"],
     additionalProperties: false
   },
   ControlScoreUpdated: {
     type: "object",
     properties: {
-      tenantId: { type: "string" },
-      scoreId: { type: "string" },
-      entityId: { type: "string" },
-      scoreType: { type: "string" },
-      score: { type: "number" },
-      updatedAt: { type: "string", format: "date-time" }
+      tenantId: nonEmptyStringSchema,
+      scoreId: nonEmptyStringSchema,
+      entityId: nonEmptyStringSchema,
+      scoreType: {
+        type: "string",
+        enum: ["tenant", "location", "shift", "employee", "inventory"]
+      },
+      score: { type: "number", minimum: 0, maximum: 100 },
+      previousScore: { type: "number", minimum: 0, maximum: 100 },
+      updatedAt: dateTimeSchema
     },
     required: ["tenantId", "scoreId", "entityId", "scoreType", "score", "updatedAt"],
     additionalProperties: false
@@ -254,14 +330,100 @@ export const EVENT_SCHEMAS: { [K in EventName]: Record<string, unknown> } = {
   AISummaryGenerated: {
     type: "object",
     properties: {
-      tenantId: { type: "string" },
-      summaryId: { type: "string" },
-      sourceId: { type: "string" },
-      summaryType: { type: "string" },
-      summary: { type: "string" },
-      generatedAt: { type: "string", format: "date-time" }
+      tenantId: nonEmptyStringSchema,
+      summaryId: nonEmptyStringSchema,
+      sourceId: nonEmptyStringSchema,
+      summaryType: {
+        type: "string",
+        enum: ["daily", "shift", "inventory", "fraud", "control-score"]
+      },
+      summary: nonEmptyStringSchema,
+      generatedAt: dateTimeSchema
     },
     required: ["tenantId", "summaryId", "sourceId", "summaryType", "summary", "generatedAt"],
     additionalProperties: false
+  }
+};
+
+export const EVENT_CONTRACTS: { [K in EventName]: EventContract<K> } = {
+  OrderCreated: {
+    eventName: "OrderCreated",
+    subject: eventSubject("OrderCreated"),
+    aggregateType: "order",
+    producer: "pos",
+    primaryConsumers: ["kitchen", "inventory", "fraud", "analytics"],
+    schema: EVENT_SCHEMAS.OrderCreated
+  },
+  OrderPaid: {
+    eventName: "OrderPaid",
+    subject: eventSubject("OrderPaid"),
+    aggregateType: "order",
+    producer: "pos",
+    primaryConsumers: ["shift", "fraud", "control-score", "analytics"],
+    schema: EVENT_SCHEMAS.OrderPaid
+  },
+  OrderCancelled: {
+    eventName: "OrderCancelled",
+    subject: eventSubject("OrderCancelled"),
+    aggregateType: "order",
+    producer: "pos",
+    primaryConsumers: ["inventory", "fraud", "analytics"],
+    schema: EVENT_SCHEMAS.OrderCancelled
+  },
+  ShiftOpened: {
+    eventName: "ShiftOpened",
+    subject: eventSubject("ShiftOpened"),
+    aggregateType: "shift",
+    producer: "employee-management",
+    primaryConsumers: ["pos", "control-score", "analytics"],
+    schema: EVENT_SCHEMAS.ShiftOpened
+  },
+  ShiftClosed: {
+    eventName: "ShiftClosed",
+    subject: eventSubject("ShiftClosed"),
+    aggregateType: "shift",
+    producer: "employee-management",
+    primaryConsumers: ["control-score", "ai-summary", "analytics"],
+    schema: EVENT_SCHEMAS.ShiftClosed
+  },
+  InventoryReceived: {
+    eventName: "InventoryReceived",
+    subject: eventSubject("InventoryReceived"),
+    aggregateType: "inventory",
+    producer: "inventory",
+    primaryConsumers: ["control-score", "analytics"],
+    schema: EVENT_SCHEMAS.InventoryReceived
+  },
+  InventoryWrittenOff: {
+    eventName: "InventoryWrittenOff",
+    subject: eventSubject("InventoryWrittenOff"),
+    aggregateType: "inventory",
+    producer: "inventory",
+    primaryConsumers: ["fraud", "control-score", "analytics"],
+    schema: EVENT_SCHEMAS.InventoryWrittenOff
+  },
+  FraudDetected: {
+    eventName: "FraudDetected",
+    subject: eventSubject("FraudDetected"),
+    aggregateType: "fraud-incident",
+    producer: "fraud",
+    primaryConsumers: ["control-score", "ai-summary", "notifications"],
+    schema: EVENT_SCHEMAS.FraudDetected
+  },
+  ControlScoreUpdated: {
+    eventName: "ControlScoreUpdated",
+    subject: eventSubject("ControlScoreUpdated"),
+    aggregateType: "control-score",
+    producer: "control-score",
+    primaryConsumers: ["dashboard", "ai-summary", "analytics"],
+    schema: EVENT_SCHEMAS.ControlScoreUpdated
+  },
+  AISummaryGenerated: {
+    eventName: "AISummaryGenerated",
+    subject: eventSubject("AISummaryGenerated"),
+    aggregateType: "ai-summary",
+    producer: "ai-summary",
+    primaryConsumers: ["dashboard", "notifications"],
+    schema: EVENT_SCHEMAS.AISummaryGenerated
   }
 };
