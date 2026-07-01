@@ -1,9 +1,9 @@
-import type { SupabaseClient, User } from "@supabase/supabase-js";
+import type { User } from "@supabase/supabase-js";
 import type { AuthRepository } from "@/repositories/interfaces/auth-repository";
-import type { Database } from "@/types/database";
+import type { AppSupabaseClient } from "@/lib/supabase/types";
 
 export class SupabaseAuthRepository implements AuthRepository {
-  constructor(private readonly supabase: SupabaseClient<Database>) {}
+  constructor(private readonly supabase: AppSupabaseClient) {}
 
   async getCurrentUser(): Promise<User | null> {
     const {

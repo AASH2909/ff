@@ -1,5 +1,6 @@
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+import type { AppSupabaseClient } from "@/lib/supabase/types";
 import { SupabaseAuthRepository } from "@/repositories/supabase/supabase-auth-repository";
 import { SupabaseUserRoleRepository } from "@/repositories/supabase/supabase-user-role-repository";
 import type { AuthRepository } from "@/repositories/interfaces/auth-repository";
@@ -36,7 +37,13 @@ export function createMiddlewareRepositories(request: NextRequest): MiddlewareRe
       getAll() {
         return request.cookies.getAll();
       },
-      setAll(cookiesToSet) {
+      setAll(
+        cookiesToSet: {
+          name: string;
+          value: string;
+          options: CookieOptions;
+        }[]
+      ) {
         cookiesToSet.forEach(({ name, value }) => {
           request.cookies.set(name, value);
         });
@@ -50,7 +57,7 @@ export function createMiddlewareRepositories(request: NextRequest): MiddlewareRe
         });
       }
     }
-  });
+  }) as unknown as AppSupabaseClient;
 
   return {
     get response() {

@@ -4,6 +4,10 @@ export const AUTH_ROUTES = ["/login", "/signup", "/forgot-password"] as const;
 
 export const PROTECTED_ROUTES = [
   {
+    path: "/api/v1/dashboard",
+    roles: [ROLES.OWNER, ROLES.ADMIN]
+  },
+  {
     path: "/dashboard",
     roles: [ROLES.OWNER, ROLES.ADMIN, ROLES.CASHIER, ROLES.COOK]
   },

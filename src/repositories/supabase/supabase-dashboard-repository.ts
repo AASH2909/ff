@@ -1,12 +1,11 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
 import type {
   DashboardOverview,
   DashboardRepository
 } from "@/repositories/interfaces/dashboard-repository";
-import type { Database } from "@/types/database";
+import type { AppSupabaseClient } from "@/lib/supabase/types";
 
 export class SupabaseDashboardRepository implements DashboardRepository {
-  constructor(private readonly supabase: SupabaseClient<Database>) {}
+  constructor(private readonly supabase: AppSupabaseClient) {}
 
   async getOverview(): Promise<DashboardOverview> {
     await this.supabase.auth.getSession();

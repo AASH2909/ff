@@ -51,7 +51,7 @@ export interface EventSubscription {
 }
 
 export interface EventBus {
-  publish(event: DomainEvent): Promise<void>;
+  publish<T extends EventName>(event: DomainEvent<T>): Promise<void>;
   publishAll(events: DomainEvent[]): Promise<void>;
   subscribe<T extends EventName>(
     eventName: T,
@@ -66,18 +66,33 @@ type SubscriptionRecord<T extends EventName> = {
   options: SubscriberOptions;
 };
 
+type SubscriptionRegistry = {
+  [T in EventName]: Array<SubscriptionRecord<T>>;
+};
+
 export class InMemoryEventBus implements EventBus {
-  private handlers = new Map<EventName, Array<SubscriptionRecord<EventName>>>();
+  private handlers: SubscriptionRegistry = {
+    OrderCreated: [],
+    OrderPaid: [],
+    OrderCancelled: [],
+    ShiftOpened: [],
+    ShiftClosed: [],
+    InventoryReceived: [],
+    InventoryWrittenOff: [],
+    FraudDetected: [],
+    ControlScoreUpdated: [],
+    AISummaryGenerated: []
+  };
   private queueGroupOffsets = new Map<string, number>();
 
   constructor(private readonly options: EventBusOptions = {}) {}
 
-  async publish(event: DomainEvent): Promise<void> {
+  async publish<T extends EventName>(event: DomainEvent<T>): Promise<void> {
     if (this.options.validateEvents ?? true) {
       assertValidEvent(event);
     }
 
-    const subscribers = this.handlers.get(event.eventName) ?? [];
+    const subscribers = this.handlers[event.eventName];
     const deliveries = this.selectDeliveries(event.eventName, subscribers);
 
     await Promise.all(
@@ -99,27 +114,27 @@ export class InMemoryEventBus implements EventBus {
     options: SubscriberOptions = {}
   ): Promise<EventSubscription> {
     const subscription: SubscriptionRecord<T> = { eventName, handler, options };
-    const existing = this.handlers.get(eventName) ?? [];
-    existing.push(subscription as SubscriptionRecord<EventName>);
-    this.handlers.set(eventName, existing);
+    const existing = this.handlers[eventName];
+    existing.push(subscription);
 
     return {
       unsubscribe: async () => {
-        const current = this.handlers.get(eventName) ?? [];
-        this.handlers.set(
-          eventName,
-          current.filter((entry) => entry !== subscription)
-        );
+        const current = this.handlers[eventName];
+        const subscriptionIndex = current.indexOf(subscription);
+
+        if (subscriptionIndex >= 0) {
+          current.splice(subscriptionIndex, 1);
+        }
       }
     };
   }
 
-  private selectDeliveries(
-    eventName: EventName,
-    subscriptions: Array<SubscriptionRecord<EventName>>
-  ): Array<SubscriptionRecord<EventName>> {
-    const directDeliveries: Array<SubscriptionRecord<EventName>> = [];
-    const queueGroups = new Map<string, Array<SubscriptionRecord<EventName>>>();
+  private selectDeliveries<T extends EventName>(
+    eventName: T,
+    subscriptions: Array<SubscriptionRecord<T>>
+  ): Array<SubscriptionRecord<T>> {
+    const directDeliveries: Array<SubscriptionRecord<T>> = [];
+    const queueGroups = new Map<string, Array<SubscriptionRecord<T>>>();
 
     for (const subscription of subscriptions) {
       const queueGroup = subscription.options.queueGroup;
@@ -148,9 +163,9 @@ export class InMemoryEventBus implements EventBus {
     return directDeliveries;
   }
 
-  private async executeWithRetry(
-    subscription: SubscriptionRecord<EventName>,
-    event: DomainEvent
+  private async executeWithRetry<T extends EventName>(
+    subscription: SubscriptionRecord<T>,
+    event: DomainEvent<T>
   ): Promise<void> {
     const retryStrategy = resolveRetryStrategy(subscription.options);
     const subject = subjectForEvent(event.eventName);
@@ -166,7 +181,7 @@ export class InMemoryEventBus implements EventBus {
       };
 
       try {
-        await subscription.handler(event as DomainEvent<EventName>, context);
+        await subscription.handler(event, context);
         return;
       } catch (error) {
         const classification =
@@ -188,9 +203,9 @@ export class InMemoryEventBus implements EventBus {
     }
   }
 
-  private async publishDeadLetter(
-    subscription: SubscriptionRecord<EventName>,
-    event: DomainEvent,
+  private async publishDeadLetter<T extends EventName>(
+    subscription: SubscriptionRecord<T>,
+    event: DomainEvent<T>,
     error: unknown,
     attempts: number,
     reason: DeadLetterReason

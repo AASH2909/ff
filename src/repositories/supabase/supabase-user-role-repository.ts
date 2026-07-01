@@ -1,10 +1,9 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { slugToRole, type Role } from "@/lib/auth/roles";
 import type { UserRoleRepository } from "@/repositories/interfaces/user-role-repository";
-import type { Database } from "@/types/database";
+import type { AppSupabaseClient } from "@/lib/supabase/types";
 
 export class SupabaseUserRoleRepository implements UserRoleRepository {
-  constructor(private readonly supabase: SupabaseClient<Database>) {}
+  constructor(private readonly supabase: AppSupabaseClient) {}
 
   async getRolesForUser(userId: string): Promise<Role[]> {
     const { data: assignments, error: assignmentsError } = await this.supabase

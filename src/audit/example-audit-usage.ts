@@ -1,6 +1,5 @@
 import type { IdGenerator } from "@/application/ports/id-generator";
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/types/database";
+import type { AppSupabaseClient } from "@/lib/supabase/types";
 import type { AuditContext, AuditPayload } from "./audit-context";
 import { Sha256AuditHashProvider } from "./audit-hash";
 import { AuditLogger } from "./audit-logger";
@@ -16,7 +15,7 @@ export class SimpleUuidGenerator implements IdGenerator {
   }
 }
 
-export function createAuditLogger(supabase: SupabaseClient<Database>): AuditLogger {
+export function createAuditLogger(supabase: AppSupabaseClient): AuditLogger {
   return new AuditLogger({
     auditRepository: new SupabaseAuditRepository(supabase),
     idGenerator: new SimpleUuidGenerator(),

@@ -1,13 +1,13 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
 import type { AuditQueryFilters, AuditQueryResult, AuditRecord } from "./types";
 import type { AuditRepository } from "./audit-repository";
+import type { AppSupabaseClient } from "@/lib/supabase/types";
 import type { Database, Json } from "@/types/database";
 
 type AuditLogRow = Database["public"]["Tables"]["audit_logs"]["Row"];
 type AuditLogInsert = Database["public"]["Tables"]["audit_logs"]["Insert"];
 
 export class SupabaseAuditRepository implements AuditRepository {
-  constructor(private readonly supabase: SupabaseClient<Database>) {}
+  constructor(private readonly supabase: AppSupabaseClient) {}
 
   async save(record: AuditRecord): Promise<void> {
     await this.saveMany([record]);
