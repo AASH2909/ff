@@ -2,9 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { SupabaseDashboardReadRepository } from "@/dashboard/infrastructure/supabase";
 import { DashboardRecommendationContextRepository } from "@/recommendation/infrastructure/dashboard";
 import { RecommendationRuleEngine } from "@/recommendation/domain";
-import {
-  GetDashboardOverviewUseCase
-} from "@/dashboard/application";
+import { GetDashboardOverviewUseCase } from "@/dashboard/application";
 import { GetRecommendationsUseCase } from "@/recommendation/application";
 import { GetLatestExecutiveSummaryUseCase } from "@/ai-summary/application";
 import { SupabaseExecutiveSummaryRepository } from "@/ai-summary/infrastructure/supabase";
@@ -30,7 +28,12 @@ export type AnalyticsContextModule = {
   controller: AnalyticsContextController;
 };
 
-export async function createAnalyticsContextModule(): Promise<AnalyticsContextModule> {
+export type AnalyticsContextApplicationServices = {
+  getAnalyticsContextUseCase: GetAnalyticsContextUseCase;
+  getLatestAnalyticsContextUseCase: GetLatestAnalyticsContextUseCase;
+};
+
+export async function createAnalyticsContextApplicationServices(): Promise<AnalyticsContextApplicationServices> {
   const supabase = await createClient();
   const dashboardReadRepository = new SupabaseDashboardReadRepository(supabase);
   const recommendationContextRepository = new DashboardRecommendationContextRepository(
@@ -60,9 +63,18 @@ export async function createAnalyticsContextModule(): Promise<AnalyticsContextMo
   };
 
   return {
+    getAnalyticsContextUseCase: new GetAnalyticsContextUseCase(useCaseDependencies),
+    getLatestAnalyticsContextUseCase: new GetLatestAnalyticsContextUseCase(useCaseDependencies)
+  };
+}
+
+export async function createAnalyticsContextModule(): Promise<AnalyticsContextModule> {
+  const services = await createAnalyticsContextApplicationServices();
+
+  return {
     controller: new AnalyticsContextController({
-      getAnalyticsContextUseCase: new GetAnalyticsContextUseCase(useCaseDependencies),
-      getLatestAnalyticsContextUseCase: new GetLatestAnalyticsContextUseCase(useCaseDependencies)
+      getAnalyticsContextUseCase: services.getAnalyticsContextUseCase,
+      getLatestAnalyticsContextUseCase: services.getLatestAnalyticsContextUseCase
     })
   };
 }
