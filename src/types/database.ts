@@ -324,6 +324,84 @@ export type Database = {
         };
         Relationships: [];
       };
+      timeline_entries: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          business_unit_id: string | null;
+          occurred_at: string;
+          event_type: string;
+          timeline_type: "FACT" | "CAUSE" | "EFFECT" | "PREDICTION" | "RECOMMENDATION";
+          title: string;
+          summary: string;
+          severity: "INFO" | "WARNING" | "CRITICAL" | "SEVERE";
+          source: "ANALYTICS_CONTEXT" | "PREDICTIVE" | "EVENT_BUS";
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          tenant_id: string;
+          business_unit_id?: string | null;
+          occurred_at: string;
+          event_type: string;
+          timeline_type: "FACT" | "CAUSE" | "EFFECT" | "PREDICTION" | "RECOMMENDATION";
+          title: string;
+          summary: string;
+          severity: "INFO" | "WARNING" | "CRITICAL" | "SEVERE";
+          source: "ANALYTICS_CONTEXT" | "PREDICTIVE" | "EVENT_BUS";
+          metadata?: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Update: {
+          id?: string;
+          tenant_id?: string;
+          business_unit_id?: string | null;
+          occurred_at?: string;
+          event_type?: string;
+          timeline_type?: "FACT" | "CAUSE" | "EFFECT" | "PREDICTION" | "RECOMMENDATION";
+          title?: string;
+          summary?: string;
+          severity?: "INFO" | "WARNING" | "CRITICAL" | "SEVERE";
+          source?: "ANALYTICS_CONTEXT" | "PREDICTIVE" | "EVENT_BUS";
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      timeline_links: {
+        Row: {
+          tenant_id: string;
+          business_unit_id: string | null;
+          source_entry_id: string;
+          target_entry_id: string;
+          relation_type: "CAUSES" | "RESULTS_IN" | "RELATES_TO" | "SUPPORTS" | "PREDICTS";
+          confidence: number;
+          created_at: string;
+        };
+        Insert: {
+          tenant_id: string;
+          business_unit_id?: string | null;
+          source_entry_id: string;
+          target_entry_id: string;
+          relation_type: "CAUSES" | "RESULTS_IN" | "RELATES_TO" | "SUPPORTS" | "PREDICTS";
+          confidence: number;
+          created_at: string;
+        };
+        Update: {
+          tenant_id?: string;
+          business_unit_id?: string | null;
+          source_entry_id?: string;
+          target_entry_id?: string;
+          relation_type?: "CAUSES" | "RESULTS_IN" | "RELATES_TO" | "SUPPORTS" | "PREDICTS";
+          confidence?: number;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       audit_logs: {
         Row: {
           id: string;
