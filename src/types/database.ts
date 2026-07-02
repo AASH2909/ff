@@ -75,6 +75,102 @@ export type Database = {
         };
         Relationships: [];
       };
+      incidents: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          business_unit_id: string | null;
+          severity: "information" | "warning" | "critical" | "severe";
+          status: "NEW" | "PENDING" | "SENT" | "ACKNOWLEDGED" | "RESOLVED" | "FAILED";
+          title: string;
+          description: string;
+          source_event: string;
+          source_event_id: string;
+          category: string;
+          created_at: string;
+          updated_at: string;
+          resolved_at: string | null;
+          metadata: Json;
+        };
+        Insert: {
+          id: string;
+          tenant_id: string;
+          business_unit_id?: string | null;
+          severity: "information" | "warning" | "critical" | "severe";
+          status?: "NEW" | "PENDING" | "SENT" | "ACKNOWLEDGED" | "RESOLVED" | "FAILED";
+          title: string;
+          description: string;
+          source_event: string;
+          source_event_id: string;
+          category: string;
+          created_at: string;
+          updated_at: string;
+          resolved_at?: string | null;
+          metadata?: Json;
+        };
+        Update: {
+          id?: string;
+          tenant_id?: string;
+          business_unit_id?: string | null;
+          severity?: "information" | "warning" | "critical" | "severe";
+          status?: "NEW" | "PENDING" | "SENT" | "ACKNOWLEDGED" | "RESOLVED" | "FAILED";
+          title?: string;
+          description?: string;
+          source_event?: string;
+          source_event_id?: string;
+          category?: string;
+          created_at?: string;
+          updated_at?: string;
+          resolved_at?: string | null;
+          metadata?: Json;
+        };
+        Relationships: [];
+      };
+      notifications: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          business_unit_id: string | null;
+          incident_id: string;
+          recipient_type: "EXECUTIVE" | "OPERATIONS" | "CONTROL_CENTER";
+          channel: "IN_APP" | "DASHBOARD" | "API";
+          status: "NEW" | "PENDING" | "SENT" | "ACKNOWLEDGED" | "RESOLVED" | "FAILED";
+          priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+          created_at: string;
+          sent_at: string | null;
+          acknowledged_at: string | null;
+          metadata: Json;
+        };
+        Insert: {
+          id: string;
+          tenant_id: string;
+          business_unit_id?: string | null;
+          incident_id: string;
+          recipient_type: "EXECUTIVE" | "OPERATIONS" | "CONTROL_CENTER";
+          channel: "IN_APP" | "DASHBOARD" | "API";
+          status?: "NEW" | "PENDING" | "SENT" | "ACKNOWLEDGED" | "RESOLVED" | "FAILED";
+          priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+          created_at: string;
+          sent_at?: string | null;
+          acknowledged_at?: string | null;
+          metadata?: Json;
+        };
+        Update: {
+          id?: string;
+          tenant_id?: string;
+          business_unit_id?: string | null;
+          incident_id?: string;
+          recipient_type?: "EXECUTIVE" | "OPERATIONS" | "CONTROL_CENTER";
+          channel?: "IN_APP" | "DASHBOARD" | "API";
+          status?: "NEW" | "PENDING" | "SENT" | "ACKNOWLEDGED" | "RESOLVED" | "FAILED";
+          priority?: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+          created_at?: string;
+          sent_at?: string | null;
+          acknowledged_at?: string | null;
+          metadata?: Json;
+        };
+        Relationships: [];
+      };
       audit_logs: {
         Row: {
           id: string;
