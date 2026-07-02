@@ -9,6 +9,72 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      ai_executive_summaries: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          business_unit_id: string | null;
+          period_start: string;
+          period_end: string;
+          summary_type: "DAILY" | "WEEKLY" | "MONTHLY" | "CUSTOM";
+          status: "DRAFT" | "READY" | "FAILED";
+          headline: string;
+          overall_assessment: string;
+          key_positive_signals: Json;
+          key_negative_signals: Json;
+          critical_risks: Json;
+          recommended_actions: Json;
+          confidence: number;
+          source_modules: Json;
+          generated_at: string;
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          tenant_id: string;
+          business_unit_id?: string | null;
+          period_start: string;
+          period_end: string;
+          summary_type: "DAILY" | "WEEKLY" | "MONTHLY" | "CUSTOM";
+          status?: "DRAFT" | "READY" | "FAILED";
+          headline: string;
+          overall_assessment: string;
+          key_positive_signals?: Json;
+          key_negative_signals?: Json;
+          critical_risks?: Json;
+          recommended_actions?: Json;
+          confidence: number;
+          source_modules?: Json;
+          generated_at: string;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          tenant_id?: string;
+          business_unit_id?: string | null;
+          period_start?: string;
+          period_end?: string;
+          summary_type?: "DAILY" | "WEEKLY" | "MONTHLY" | "CUSTOM";
+          status?: "DRAFT" | "READY" | "FAILED";
+          headline?: string;
+          overall_assessment?: string;
+          key_positive_signals?: Json;
+          key_negative_signals?: Json;
+          critical_risks?: Json;
+          recommended_actions?: Json;
+          confidence?: number;
+          source_modules?: Json;
+          generated_at?: string;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       audit_logs: {
         Row: {
           id: string;

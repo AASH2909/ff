@@ -81,6 +81,8 @@ function mapScoreFact(
     score: currentScore.score,
     status: currentScore.status,
     scoreChange: currentScore.getScoreChange(previousScore),
+    periodStart: currentScore.periodStart,
+    periodEnd: currentScore.periodEnd,
     calculatedAt: currentScore.calculatedAt
   };
 }

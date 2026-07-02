@@ -12,6 +12,8 @@ export type RecommendationScoreFact = {
   score: number;
   status: string;
   scoreChange: number | null;
+  periodStart: Date;
+  periodEnd: Date;
   calculatedAt: Date;
 };
 

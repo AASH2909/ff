@@ -27,7 +27,15 @@ export type PaymentMethod = "cash" | "card" | "online";
 export type ShiftStatus = "open" | "closed";
 export type FraudSeverity = "low" | "medium" | "high" | "critical";
 export type ControlScoreType = "tenant" | "location" | "shift" | "employee" | "inventory";
-export type AISummaryType = "daily" | "shift" | "inventory" | "fraud" | "control-score";
+export type AISummaryType =
+  | "daily"
+  | "weekly"
+  | "monthly"
+  | "custom"
+  | "shift"
+  | "inventory"
+  | "fraud"
+  | "control-score";
 
 export type MonetaryValue = {
   amount: number;
@@ -335,7 +343,7 @@ export const EVENT_SCHEMAS: { [K in EventName]: JsonSchema } = {
       sourceId: nonEmptyStringSchema,
       summaryType: {
         type: "string",
-        enum: ["daily", "shift", "inventory", "fraud", "control-score"]
+        enum: ["daily", "weekly", "monthly", "custom", "shift", "inventory", "fraud", "control-score"]
       },
       summary: nonEmptyStringSchema,
       generatedAt: dateTimeSchema
