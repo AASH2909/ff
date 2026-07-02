@@ -75,6 +75,120 @@ export type Database = {
         };
         Relationships: [];
       };
+      copilot_sessions: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          business_unit_id: string | null;
+          status: "ACTIVE" | "CLOSED";
+          created_at: string;
+          updated_at: string;
+          metadata: Json;
+        };
+        Insert: {
+          id: string;
+          tenant_id: string;
+          business_unit_id?: string | null;
+          status?: "ACTIVE" | "CLOSED";
+          created_at: string;
+          updated_at: string;
+          metadata?: Json;
+        };
+        Update: {
+          id?: string;
+          tenant_id?: string;
+          business_unit_id?: string | null;
+          status?: "ACTIVE" | "CLOSED";
+          created_at?: string;
+          updated_at?: string;
+          metadata?: Json;
+        };
+        Relationships: [];
+      };
+      copilot_messages: {
+        Row: {
+          id: string;
+          session_id: string;
+          role: "USER" | "ASSISTANT" | "SYSTEM";
+          content: string;
+          intent:
+            | "BUSINESS_STATUS"
+            | "WHY_DID_THIS_HAPPEN"
+            | "WHAT_WILL_HAPPEN_NEXT"
+            | "WHAT_SHOULD_WE_DO"
+            | "RISK_EXPLANATION"
+            | "TIMELINE_EXPLANATION"
+            | "UNKNOWN";
+          created_at: string;
+          metadata: Json;
+        };
+        Insert: {
+          id: string;
+          session_id: string;
+          role: "USER" | "ASSISTANT" | "SYSTEM";
+          content: string;
+          intent?:
+            | "BUSINESS_STATUS"
+            | "WHY_DID_THIS_HAPPEN"
+            | "WHAT_WILL_HAPPEN_NEXT"
+            | "WHAT_SHOULD_WE_DO"
+            | "RISK_EXPLANATION"
+            | "TIMELINE_EXPLANATION"
+            | "UNKNOWN";
+          created_at: string;
+          metadata?: Json;
+        };
+        Update: {
+          id?: string;
+          session_id?: string;
+          role?: "USER" | "ASSISTANT" | "SYSTEM";
+          content?: string;
+          intent?:
+            | "BUSINESS_STATUS"
+            | "WHY_DID_THIS_HAPPEN"
+            | "WHAT_WILL_HAPPEN_NEXT"
+            | "WHAT_SHOULD_WE_DO"
+            | "RISK_EXPLANATION"
+            | "TIMELINE_EXPLANATION"
+            | "UNKNOWN";
+          created_at?: string;
+          metadata?: Json;
+        };
+        Relationships: [];
+      };
+      copilot_context_snapshots: {
+        Row: {
+          id: string;
+          session_id: string;
+          analytics_context: Json | null;
+          predictions: Json;
+          timeline: Json;
+          decision_scenarios: Json;
+          created_at: string;
+          metadata: Json;
+        };
+        Insert: {
+          id: string;
+          session_id: string;
+          analytics_context?: Json | null;
+          predictions?: Json;
+          timeline?: Json;
+          decision_scenarios?: Json;
+          created_at: string;
+          metadata?: Json;
+        };
+        Update: {
+          id?: string;
+          session_id?: string;
+          analytics_context?: Json | null;
+          predictions?: Json;
+          timeline?: Json;
+          decision_scenarios?: Json;
+          created_at?: string;
+          metadata?: Json;
+        };
+        Relationships: [];
+      };
       incidents: {
         Row: {
           id: string;
