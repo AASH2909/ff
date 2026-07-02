@@ -402,6 +402,120 @@ export type Database = {
         };
         Relationships: [];
       };
+      decision_scenarios: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          business_unit_id: string | null;
+          scenario_type:
+            | "RESOLVE_CRITICAL_INCIDENTS"
+            | "EXECUTE_HIGH_PRIORITY_RECOMMENDATIONS"
+            | "REDUCE_FRAUD_RISK"
+            | "IMPROVE_INVENTORY_CONTROL"
+            | "IMPROVE_OPERATIONS"
+            | "STABILIZE_CONTROL_SCORE"
+            | "MAINTAIN_STABLE_OPERATIONS";
+          title: string;
+          description: string;
+          estimated_impact: Json;
+          confidence: number;
+          assumptions: Json;
+          risks: Json;
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          tenant_id: string;
+          business_unit_id?: string | null;
+          scenario_type:
+            | "RESOLVE_CRITICAL_INCIDENTS"
+            | "EXECUTE_HIGH_PRIORITY_RECOMMENDATIONS"
+            | "REDUCE_FRAUD_RISK"
+            | "IMPROVE_INVENTORY_CONTROL"
+            | "IMPROVE_OPERATIONS"
+            | "STABILIZE_CONTROL_SCORE"
+            | "MAINTAIN_STABLE_OPERATIONS";
+          title: string;
+          description: string;
+          estimated_impact?: Json;
+          confidence: number;
+          assumptions?: Json;
+          risks?: Json;
+          metadata?: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Update: {
+          id?: string;
+          tenant_id?: string;
+          business_unit_id?: string | null;
+          scenario_type?:
+            | "RESOLVE_CRITICAL_INCIDENTS"
+            | "EXECUTE_HIGH_PRIORITY_RECOMMENDATIONS"
+            | "REDUCE_FRAUD_RISK"
+            | "IMPROVE_INVENTORY_CONTROL"
+            | "IMPROVE_OPERATIONS"
+            | "STABILIZE_CONTROL_SCORE"
+            | "MAINTAIN_STABLE_OPERATIONS";
+          title?: string;
+          description?: string;
+          estimated_impact?: Json;
+          confidence?: number;
+          assumptions?: Json;
+          risks?: Json;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      decision_actions: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          business_unit_id: string | null;
+          scenario_id: string;
+          action_type: string;
+          title: string;
+          description: string;
+          expected_effect: string;
+          effort: "LOW" | "MEDIUM" | "HIGH";
+          priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+          action_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id: string;
+          tenant_id: string;
+          business_unit_id?: string | null;
+          scenario_id: string;
+          action_type: string;
+          title: string;
+          description: string;
+          expected_effect: string;
+          effort: "LOW" | "MEDIUM" | "HIGH";
+          priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+          action_order: number;
+          created_at: string;
+        };
+        Update: {
+          id?: string;
+          tenant_id?: string;
+          business_unit_id?: string | null;
+          scenario_id?: string;
+          action_type?: string;
+          title?: string;
+          description?: string;
+          expected_effect?: string;
+          effort?: "LOW" | "MEDIUM" | "HIGH";
+          priority?: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+          action_order?: number;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       audit_logs: {
         Row: {
           id: string;
