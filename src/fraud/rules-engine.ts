@@ -360,8 +360,7 @@ export class FraudRiskScoreCalculator {
 
   adjustScore(
     currentScore: FraudRiskScore,
-    adjustment: number,
-    reason?: string
+    adjustment: number
   ): FraudRiskScore {
     if (adjustment > 0) {
       return currentScore.add(adjustment);
