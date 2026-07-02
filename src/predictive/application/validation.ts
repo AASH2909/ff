@@ -1,5 +1,6 @@
 import type { ApplicationError } from "@/application/result";
 import type {
+  GeneratePredictionsCommandDto,
   PredictionByIdQueryDto,
   PredictionQueryDto,
   PredictionScopeDto
@@ -26,9 +27,13 @@ export type ValidatedPredictionQuery = ValidatedPredictionScope & {
   limit: number;
 };
 
+export type ValidatedGeneratePredictionsCommand = ValidatedPredictionScope & {
+  predictionWindow: PredictionWindow;
+  limit: number;
+};
+
 export type ValidatedPredictionByIdQuery = ValidatedPredictionScope & {
   id: string;
-  predictionWindow: PredictionWindow;
 };
 
 export function validatePredictionScope(input: PredictionScopeDto): {
@@ -116,17 +121,48 @@ export function validatePredictionByIdQuery(input: PredictionByIdQueryDto): {
     };
   }
 
+  return {
+    value: {
+      ...scope.value,
+      id: input.id.trim()
+    }
+  };
+}
+
+export function validateGeneratePredictionsCommand(
+  input: GeneratePredictionsCommandDto
+): {
+  value?: ValidatedGeneratePredictionsCommand;
+  error?: ApplicationError;
+} {
+  const scope = validatePredictionScope(input);
+
+  if (scope.error || !scope.value) {
+    return { error: scope.error };
+  }
+
   const predictionWindow = parsePredictionWindow(input.predictionWindow);
 
   if (predictionWindow.error || !predictionWindow.value) {
     return { error: predictionWindow.error };
   }
 
+  const limit = input.limit ?? DEFAULT_PREDICTION_LIMIT;
+
+  if (!Number.isInteger(limit) || limit < 1 || limit > MAX_PREDICTION_LIMIT) {
+    return {
+      error: {
+        code: "VALIDATION_ERROR",
+        message: `Limit must be an integer between 1 and ${MAX_PREDICTION_LIMIT}.`
+      }
+    };
+  }
+
   return {
     value: {
       ...scope.value,
-      id: input.id.trim(),
-      predictionWindow: predictionWindow.value
+      predictionWindow: predictionWindow.value,
+      limit
     }
   };
 }
@@ -147,7 +183,8 @@ function parsePredictionType(
   return {
     error: {
       code: "VALIDATION_ERROR",
-      message: "Prediction type must be CONTROL_SCORE, FRAUD, OPERATIONS, INVENTORY, or FINANCIAL."
+      message:
+        "Prediction type must be CONTROL_SCORE, FRAUD_RISK, OPERATIONAL_RISK, INVENTORY_RISK, FINANCIAL_RISK, or STAFF_RISK."
     }
   };
 }
@@ -168,7 +205,7 @@ function parsePredictionWindow(
   return {
     error: {
       code: "VALIDATION_ERROR",
-      message: "Prediction window must be NEXT_7_DAYS, NEXT_30_DAYS, or NEXT_90_DAYS."
+      message: "Prediction window must be NEXT_24_HOURS, NEXT_7_DAYS, or NEXT_30_DAYS."
     }
   };
 }

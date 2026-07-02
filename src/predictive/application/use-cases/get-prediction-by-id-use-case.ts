@@ -7,8 +7,6 @@ import type {
 import { toPredictionDto } from "@/predictive/application/dtos";
 import { validatePredictionByIdQuery } from "@/predictive/application/validation";
 import {
-  getPredictionClock,
-  getPredictionRuleEngine,
   mapUnexpectedPredictionError,
   type PredictionUseCaseCommonDependencies
 } from "@/predictive/application/use-cases/prediction-use-case-helpers";
@@ -29,19 +27,11 @@ export class GetPredictionByIdUseCase
     }
 
     try {
-      const { tenantId, businessUnitId, id, predictionWindow } = validation.value;
-      const context = await this.dependencies.predictionContextRepository.load({
-        tenantId,
-        businessUnitId,
-        limit: 10
-      });
-      const prediction = getPredictionRuleEngine(this.dependencies)
-        .generate({
-          context,
-          predictionWindow,
-          generatedAt: getPredictionClock(this.dependencies).now()
-        })
-        .find((candidate) => candidate.id === id);
+      const { tenantId, businessUnitId, id } = validation.value;
+      const prediction = await this.dependencies.predictionRepository.findById(
+        { tenantId, businessUnitId },
+        id
+      );
 
       if (!prediction) {
         return fail("NOT_FOUND", "Prediction was not found.");

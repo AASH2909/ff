@@ -3,10 +3,10 @@ import { createPredictiveModule } from "@/predictive";
 
 /**
  * @swagger
- * /api/v1/predictions/latest:
- *   get:
- *     summary: Get latest highest-priority prediction
- *     description: Returns the highest-priority persisted deterministic prediction for the requested scope.
+ * /api/v1/predictions/generate:
+ *   post:
+ *     summary: Generate deterministic predictive analytics
+ *     description: Generates and persists explainable rule-based predictions using Analytics Context as the only input.
  *     tags:
  *       - Predictive Analytics
  *     parameters:
@@ -20,20 +20,19 @@ import { createPredictiveModule } from "@/predictive";
  *         schema:
  *           type: string
  *       - in: query
- *         name: predictionType
- *         schema:
- *           type: string
- *           enum: [CONTROL_SCORE, FRAUD_RISK, OPERATIONAL_RISK, INVENTORY_RISK, FINANCIAL_RISK, STAFF_RISK]
- *       - in: query
  *         name: predictionWindow
  *         schema:
  *           type: string
  *           enum: [NEXT_24_HOURS, NEXT_7_DAYS, NEXT_30_DAYS]
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
- *         description: Latest predictive analytics result
+ *         description: Generated predictive analytics results
  */
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   const { controller } = await createPredictiveModule();
-  return controller.getLatestPrediction(request);
+  return controller.generatePredictions(request);
 }

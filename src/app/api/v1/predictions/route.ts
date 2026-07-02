@@ -6,7 +6,7 @@ import { createPredictiveModule } from "@/predictive";
  * /api/v1/predictions:
  *   get:
  *     summary: Get deterministic predictive analytics
- *     description: Returns explainable rule-based predictions generated only from Analytics Context. No ML, external AI, or upstream business object generation is performed.
+ *     description: Returns persisted explainable rule-based predictions generated only from Analytics Context. No ML, external AI, or upstream business object generation is performed.
  *     tags:
  *       - Predictive Analytics
  *     parameters:
@@ -23,12 +23,12 @@ import { createPredictiveModule } from "@/predictive";
  *         name: predictionType
  *         schema:
  *           type: string
- *           enum: [CONTROL_SCORE, FRAUD, OPERATIONS, INVENTORY, FINANCIAL]
+ *           enum: [CONTROL_SCORE, FRAUD_RISK, OPERATIONAL_RISK, INVENTORY_RISK, FINANCIAL_RISK, STAFF_RISK]
  *       - in: query
  *         name: predictionWindow
  *         schema:
  *           type: string
- *           enum: [NEXT_7_DAYS, NEXT_30_DAYS, NEXT_90_DAYS]
+ *           enum: [NEXT_24_HOURS, NEXT_7_DAYS, NEXT_30_DAYS]
  *       - in: query
  *         name: limit
  *         schema:

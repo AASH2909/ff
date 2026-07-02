@@ -1,5 +1,7 @@
 import type { NextRequest } from "next/server";
 import type {
+  GeneratePredictionsCommandDto,
+  GeneratePredictionsUseCase,
   GetLatestPredictionUseCase,
   GetPredictionByIdUseCase,
   GetPredictionsUseCase,
@@ -10,6 +12,7 @@ import type {
 import { jsonResult } from "@/predictive/presentation/http/api-response";
 
 export type PredictionControllerDependencies = {
+  generatePredictionsUseCase: GeneratePredictionsUseCase;
   getPredictionsUseCase: GetPredictionsUseCase;
   getLatestPredictionUseCase: GetLatestPredictionUseCase;
   getPredictionByIdUseCase: GetPredictionByIdUseCase;
@@ -21,6 +24,14 @@ export class PredictionController {
   async getPredictions(request: NextRequest) {
     return jsonResult(
       await this.dependencies.getPredictionsUseCase.execute(this.getPredictionQuery(request))
+    );
+  }
+
+  async generatePredictions(request: NextRequest) {
+    return jsonResult(
+      await this.dependencies.generatePredictionsUseCase.execute(
+        this.getGeneratePredictionsCommand(request)
+      )
     );
   }
 
@@ -63,12 +74,20 @@ export class PredictionController {
   }
 
   private getPredictionByIdQuery(request: NextRequest, id: string): PredictionByIdQueryDto {
+    return {
+      ...this.getScope(request),
+      id
+    };
+  }
+
+  private getGeneratePredictionsCommand(request: NextRequest): GeneratePredictionsCommandDto {
     const url = new URL(request.url);
+    const limit = url.searchParams.get("limit");
 
     return {
       ...this.getScope(request),
-      id,
-      predictionWindow: url.searchParams.get("predictionWindow") ?? undefined
+      predictionWindow: url.searchParams.get("predictionWindow") ?? undefined,
+      limit: limit === null ? undefined : Number(limit)
     };
   }
 }

@@ -1,10 +1,10 @@
 import { DomainError } from "@/domain/errors";
 
-export const PREDICTION_WINDOWS = ["NEXT_7_DAYS", "NEXT_30_DAYS", "NEXT_90_DAYS"] as const;
+export const PREDICTION_WINDOWS = ["NEXT_24_HOURS", "NEXT_7_DAYS", "NEXT_30_DAYS"] as const;
 
 export type PredictionWindow = (typeof PREDICTION_WINDOWS)[number];
 
-export const DEFAULT_PREDICTION_WINDOW: PredictionWindow = "NEXT_30_DAYS";
+export const DEFAULT_PREDICTION_WINDOW: PredictionWindow = "NEXT_7_DAYS";
 
 export function isPredictionWindow(value: unknown): value is PredictionWindow {
   return typeof value === "string" && PREDICTION_WINDOWS.includes(value as PredictionWindow);

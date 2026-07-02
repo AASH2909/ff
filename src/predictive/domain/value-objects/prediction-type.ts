@@ -2,10 +2,11 @@ import { DomainError } from "@/domain/errors";
 
 export const PREDICTION_TYPES = [
   "CONTROL_SCORE",
-  "FRAUD",
-  "OPERATIONS",
-  "INVENTORY",
-  "FINANCIAL"
+  "FRAUD_RISK",
+  "OPERATIONAL_RISK",
+  "INVENTORY_RISK",
+  "FINANCIAL_RISK",
+  "STAFF_RISK"
 ] as const;
 
 export type PredictionType = (typeof PREDICTION_TYPES)[number];

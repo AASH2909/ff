@@ -171,6 +171,159 @@ export type Database = {
         };
         Relationships: [];
       };
+      predictive_predictions: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          business_unit_id: string | null;
+          prediction_type:
+            | "CONTROL_SCORE"
+            | "FRAUD_RISK"
+            | "OPERATIONAL_RISK"
+            | "INVENTORY_RISK"
+            | "FINANCIAL_RISK"
+            | "STAFF_RISK";
+          prediction_window: "NEXT_24_HOURS" | "NEXT_7_DAYS" | "NEXT_30_DAYS";
+          risk_level: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+          trend: "IMPROVING" | "STABLE" | "DECLINING" | "UNKNOWN";
+          confidence: number;
+          summary: string;
+          predicted_control_score: number | null;
+          created_at: string;
+          metadata: Json;
+        };
+        Insert: {
+          id: string;
+          tenant_id: string;
+          business_unit_id?: string | null;
+          prediction_type:
+            | "CONTROL_SCORE"
+            | "FRAUD_RISK"
+            | "OPERATIONAL_RISK"
+            | "INVENTORY_RISK"
+            | "FINANCIAL_RISK"
+            | "STAFF_RISK";
+          prediction_window: "NEXT_24_HOURS" | "NEXT_7_DAYS" | "NEXT_30_DAYS";
+          risk_level: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+          trend: "IMPROVING" | "STABLE" | "DECLINING" | "UNKNOWN";
+          confidence: number;
+          summary: string;
+          predicted_control_score?: number | null;
+          created_at: string;
+          metadata?: Json;
+        };
+        Update: {
+          id?: string;
+          tenant_id?: string;
+          business_unit_id?: string | null;
+          prediction_type?:
+            | "CONTROL_SCORE"
+            | "FRAUD_RISK"
+            | "OPERATIONAL_RISK"
+            | "INVENTORY_RISK"
+            | "FINANCIAL_RISK"
+            | "STAFF_RISK";
+          prediction_window?: "NEXT_24_HOURS" | "NEXT_7_DAYS" | "NEXT_30_DAYS";
+          risk_level?: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+          trend?: "IMPROVING" | "STABLE" | "DECLINING" | "UNKNOWN";
+          confidence?: number;
+          summary?: string;
+          predicted_control_score?: number | null;
+          created_at?: string;
+          metadata?: Json;
+        };
+        Relationships: [];
+      };
+      predictive_prediction_factors: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          business_unit_id: string | null;
+          prediction_id: string;
+          factor_type: string;
+          source: string;
+          title: string;
+          description: string;
+          impact: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+          weight: number;
+          direction: "POSITIVE" | "NEGATIVE" | "NEUTRAL";
+          evidence: Json;
+          created_at: string;
+        };
+        Insert: {
+          id: string;
+          tenant_id: string;
+          business_unit_id?: string | null;
+          prediction_id: string;
+          factor_type: string;
+          source: string;
+          title: string;
+          description: string;
+          impact: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+          weight: number;
+          direction: "POSITIVE" | "NEGATIVE" | "NEUTRAL";
+          evidence?: Json;
+          created_at: string;
+        };
+        Update: {
+          id?: string;
+          tenant_id?: string;
+          business_unit_id?: string | null;
+          prediction_id?: string;
+          factor_type?: string;
+          source?: string;
+          title?: string;
+          description?: string;
+          impact?: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+          weight?: number;
+          direction?: "POSITIVE" | "NEGATIVE" | "NEUTRAL";
+          evidence?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      predictive_prediction_scenarios: {
+        Row: {
+          id: string;
+          tenant_id: string;
+          business_unit_id: string | null;
+          prediction_id: string;
+          scenario_type: string;
+          title: string;
+          description: string;
+          expected_impact: string;
+          confidence: number;
+          assumptions: Json;
+          created_at: string;
+        };
+        Insert: {
+          id: string;
+          tenant_id: string;
+          business_unit_id?: string | null;
+          prediction_id: string;
+          scenario_type: string;
+          title: string;
+          description: string;
+          expected_impact: string;
+          confidence: number;
+          assumptions?: Json;
+          created_at: string;
+        };
+        Update: {
+          id?: string;
+          tenant_id?: string;
+          business_unit_id?: string | null;
+          prediction_id?: string;
+          scenario_type?: string;
+          title?: string;
+          description?: string;
+          expected_impact?: string;
+          confidence?: number;
+          assumptions?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       audit_logs: {
         Row: {
           id: string;
