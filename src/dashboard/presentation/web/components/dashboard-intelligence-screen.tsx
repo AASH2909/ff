@@ -18,6 +18,7 @@ import { OverviewCard } from "@/dashboard/presentation/web/components/overview-c
 import { ScoreTrendWidget } from "@/dashboard/presentation/web/components/score-trend-widget";
 import type { DashboardHistoryQuery } from "@/dashboard/presentation/web/api/dashboard-api-client";
 import { useDashboardIntelligence } from "@/dashboard/presentation/web/hooks/use-dashboard-intelligence";
+import { ExecutiveRecommendationsWidget } from "@/recommendation/presentation/web/components/executive-recommendations-widget";
 
 const DASHBOARD_SCOPE_STORAGE_KEY = "controlos.dashboard.scope";
 const DEFAULT_HISTORY_LIMIT = 12;
@@ -61,15 +62,17 @@ export function DashboardIntelligenceScreen() {
       {state === "idle" ? <DashboardScopeEmptyState /> : null}
       {state === "loading" ? <DashboardLoadingState /> : null}
       {state === "error" && error ? <DashboardErrorState error={error} onRetry={refresh} /> : null}
-      {state === "success" && data ? <DashboardDataView data={data} /> : null}
+      {state === "success" && data ? <DashboardDataView data={data} scope={scope} /> : null}
     </>
   );
 }
 
 function DashboardDataView({
-  data
+  data,
+  scope
 }: {
   data: NonNullable<ReturnType<typeof useDashboardIntelligence>["data"]>;
+  scope: DashboardHistoryQuery;
 }) {
   const domains = data.domainBreakdown.domains.length
     ? data.domainBreakdown.domains
@@ -92,6 +95,13 @@ function DashboardDataView({
         <ScoreTrendWidget points={history} />
       </div>
       <DomainBreakdownWidget domains={domains} />
+      <ExecutiveRecommendationsWidget
+        scope={{
+          tenantId: scope.tenantId,
+          businessUnitId: scope.businessUnitId,
+          limit: 8
+        }}
+      />
       <div className="grid gap-4 xl:grid-cols-2">
         <DriversWidget
           title="Top Positive Drivers"
