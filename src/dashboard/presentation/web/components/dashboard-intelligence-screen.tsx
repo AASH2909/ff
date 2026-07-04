@@ -5,11 +5,11 @@ import { PageHeading } from "@/components/app/page-heading";
 import { PageSection } from "@/components/design-system";
 import { AlertsWidget } from "@/dashboard/presentation/web/components/alerts-widget";
 import { DashboardScopeControls } from "@/dashboard/presentation/web/components/dashboard-scope-controls";
+import { DemoDashboardView } from "@/dashboard/presentation/web/components/demo-dashboard-view";
 import {
   DashboardDataEmptyState,
   DashboardErrorState,
-  DashboardLoadingState,
-  DashboardScopeEmptyState
+  DashboardLoadingState
 } from "@/dashboard/presentation/web/components/dashboard-states";
 import { DomainBreakdownWidget } from "@/dashboard/presentation/web/components/domain-breakdown-widget";
 import { DriversWidget } from "@/dashboard/presentation/web/components/drivers-widget";
@@ -59,7 +59,7 @@ export function DashboardIntelligenceScreen() {
           onRefresh={refresh}
         />
       </PageSection>
-      {state === "idle" ? <DashboardScopeEmptyState /> : null}
+      {state === "idle" ? <DemoDashboardView /> : null}
       {state === "loading" ? <DashboardLoadingState /> : null}
       {state === "error" && error ? <DashboardErrorState error={error} onRetry={refresh} /> : null}
       {state === "success" && data ? <DashboardDataView data={data} scope={scope} /> : null}
