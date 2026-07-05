@@ -77,3 +77,48 @@ CI remains the full quality gate and continues to run:
 - `pnpm build`
 
 Build validation is intentionally deferred to CI instead of running on every local commit.
+
+## Sprint 4 Scope
+
+RFC-026 Sprint 4 adds test coverage visibility to the Vitest foundation.
+
+Coverage is generated with the Vitest V8 coverage provider and reports:
+
+- Text summary in the terminal
+- LCOV output in `coverage/lcov.info`
+- HTML report in `coverage/`
+
+The CI quality gate now validates:
+
+- `pnpm lint`
+- `pnpm test`
+- `pnpm test:coverage`
+- `pnpm build`
+
+Coverage is reported but not enforced with strict thresholds yet.
+
+Coverage thresholds are deferred until CONTROL OS has broader unit coverage across domain and service modules.
+
+## Sprint 5 Scope
+
+RFC-026 Sprint 5 modernizes linting by migrating from deprecated `next lint` to the ESLint CLI.
+
+The lint entry point is now:
+
+- `pnpm lint`
+
+which runs:
+
+- `eslint .`
+
+The project now uses a root `eslint.config.mjs` flat config for ESLint 9 compatibility with Next.js recommended rules.
+
+RFC-026 now provides:
+
+- CI quality gate
+- TypeScript unit testing with Vitest
+- Coverage visibility
+- Local pre-commit gates with Husky and lint-staged
+- Modern ESLint CLI linting
+
+The next phase after RFC-026 can return to product work, including the planned AI provider integration path.

@@ -1,18 +1,8 @@
-import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import nextPlugin from "@next/eslint-plugin-next";
+import tseslint from "typescript-eslint";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  allConfig: js.configs.all,
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended
-});
-
-const eslintConfig = [
+export default [
   {
     ignores: [
       ".next/**",
@@ -26,7 +16,16 @@ const eslintConfig = [
       "*.tsbuildinfo"
     ]
   },
-  ...compat.extends("next/core-web-vitals", "next/typescript")
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  {
+    files: ["**/*.{ts,tsx}"],
+    plugins: {
+      "@next/next": nextPlugin
+    },
+    rules: {
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs["core-web-vitals"].rules
+    }
+  }
 ];
-
-export default eslintConfig;
