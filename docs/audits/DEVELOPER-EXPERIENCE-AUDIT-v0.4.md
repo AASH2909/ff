@@ -54,3 +54,26 @@ UI component tests and end-to-end tests are intentionally deferred to later spri
 React Testing Library and browser-based E2E tooling are not introduced in Sprint 2.
 
 The current testing scope remains unit tests only.
+
+## Sprint 3 Scope
+
+RFC-026 Sprint 3 adds lightweight local pre-commit quality gates.
+
+The local pre-commit hook runs:
+
+- `pnpm lint-staged`
+
+For staged TypeScript and TSX files, lint-staged runs:
+
+- `pnpm lint`
+- `pnpm test`
+
+The pre-commit gate is intentionally lightweight and does not run the production build.
+
+CI remains the full quality gate and continues to run:
+
+- `pnpm lint`
+- `pnpm test`
+- `pnpm build`
+
+Build validation is intentionally deferred to CI instead of running on every local commit.
