@@ -17,16 +17,18 @@ export function DemoControlScoreCard() {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <CardTitle>Control Score</CardTitle>
+        <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <CardTitle className="text-base">Control Score Factors</CardTitle>
             <CardDescription>{controlScore.description}</CardDescription>
           </div>
-          <Badge variant="warning">{controlScore.status}</Badge>
+          <Badge variant="outline" className="w-fit shrink-0">
+            {controlScore.status}
+          </Badge>
         </div>
       </CardHeader>
       <CardContent className="space-y-5">
-        <div className="flex items-center gap-4">
+        <div className="flex min-w-0 items-center gap-4">
           <div className="grid size-20 shrink-0 place-items-center rounded-full border bg-surface">
             <Gauge className="size-8 text-primary" aria-hidden="true" />
           </div>
@@ -36,9 +38,9 @@ export function DemoControlScoreCard() {
           </div>
         </div>
         <div className="space-y-2">
-          <div className="flex items-center justify-between gap-3 text-sm">
-            <span className="font-medium">{controlScore.coverageLabel}</span>
-            <span className="text-muted-foreground">{controlScore.coverageValueLabel}</span>
+          <div className="flex min-w-0 items-center justify-between gap-3 text-sm">
+            <span className="min-w-0 font-medium">{controlScore.coverageLabel}</span>
+            <span className="shrink-0 text-muted-foreground">{controlScore.coverageValueLabel}</span>
           </div>
           <Progress value={controlScore.numericValue} />
         </div>

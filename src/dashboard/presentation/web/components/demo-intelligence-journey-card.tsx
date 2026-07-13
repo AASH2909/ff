@@ -7,45 +7,45 @@ export function DemoIntelligenceJourneyCard() {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <CardTitle>Intelligence Journey</CardTitle>
-            <CardDescription>
-              How CONTROL OS connects signals, context, prediction, timeline, decision, and Copilot
-              explanation.
-            </CardDescription>
+        <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <CardTitle className="text-base">Signal Chain</CardTitle>
+            <CardDescription>How the demo connects risk, prediction, decision, and Copilot.</CardDescription>
           </div>
-          <Badge variant="secondary">Connected flow</Badge>
+          <Badge variant="outline" className="w-fit shrink-0">
+            Connected
+          </Badge>
         </div>
       </CardHeader>
       <CardContent>
         <ol
-          className="grid gap-3 lg:grid-cols-6"
+          className="flex min-w-0 snap-x gap-3 overflow-x-auto pb-2"
           aria-label="Demo intelligence journey from risk signal to Copilot explanation"
         >
           {intelligenceJourney.map((step, index) => (
-            <li key={step.label} className="relative">
-              <article className="flex h-full min-h-36 flex-col rounded-md border bg-background p-3">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
+            <li key={step.label} className="relative w-64 min-w-64 snap-start">
+              <article className="flex h-full min-h-36 min-w-0 flex-col rounded-md border bg-background p-3">
+                <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0">
                     <p className="text-xs font-semibold uppercase text-muted-foreground">
                       Step {index + 1}
                     </p>
                     <h3 className="mt-1 text-sm font-semibold">{step.label}</h3>
                   </div>
-                  <Badge variant={step.variant} className="shrink-0">
+                  <Badge variant="outline" className="w-fit shrink-0">
                     {step.status}
                   </Badge>
                 </div>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">{step.explanation}</p>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                  {step.explanation}
+                </p>
               </article>
               {index < intelligenceJourney.length - 1 ? (
                 <div
-                  className="flex items-center justify-center py-1 text-xs font-semibold uppercase text-muted-foreground lg:absolute lg:-right-3 lg:top-1/2 lg:z-10 lg:-translate-y-1/2 lg:bg-card lg:px-1 lg:py-0"
+                  className="absolute -right-3 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center bg-card px-1 text-xs font-semibold text-muted-foreground"
                   aria-hidden="true"
                 >
-                  <span className="lg:hidden">Next</span>
-                  <span className="hidden lg:inline">-&gt;</span>
+                  <span aria-hidden="true">-&gt;</span>
                 </div>
               ) : null}
             </li>

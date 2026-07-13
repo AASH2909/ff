@@ -16,18 +16,54 @@ export const demoDashboardData = {
     status: "CONTROL OS Interactive Demo",
     badges: ["Sample restaurant", "No production data"],
     description:
-      "This demo uses Harbor & Pine sample operations data. Real dashboard data appears after a tenant scope is selected above.",
-    scopeTitle: "Tenant scope not selected",
+      "This demo uses Harbor & Pine sample operations data. Real dashboard data appears after a restaurant scope is selected in the application shell.",
+    scopeTitle: "Restaurant scope not selected",
     scopeDescription: "Demo mode is active."
+  },
+  demoScope: {
+    restaurantLabel: "Restaurant",
+    restaurant: "Harbor & Pine",
+    locationLabel: "Location",
+    location: "Downtown"
   },
   restaurantContext: [
     { label: "Restaurant", value: "Harbor & Pine" },
+    { label: "Location", value: "Downtown" },
     { label: "Shift", value: "Friday dinner" },
     { label: "Service window", value: "5:30 PM-10:30 PM" },
     { label: "Guests seated", value: "218" },
-    { label: "Active stations", value: "6" },
-    { label: "Region", value: "Seattle" }
+    { label: "Active stations", value: "6" }
   ],
+  executiveHero: {
+    restaurantLabel: "Restaurant Health",
+    overallHealthLabel: "Overall Health",
+    overallHealth: "Service pressure building",
+    scoreLabel: "Control Score",
+    riskLevelLabel: "Risk Level",
+    riskLevel: "Moderate Risk",
+    dailyDeltaLabel: "Daily Delta",
+    dailyDelta: "▼ 9 since lunch",
+    lastUpdateLabel: "Last update",
+    lastUpdate: "7:10 PM"
+  },
+  briefingSections: {
+    keySignals: {
+      title: "What needs attention",
+      description: "The three signals that need attention now."
+    },
+    recommendation: {
+      title: "Next Best Action",
+      description: "The next operating move for this shift."
+    },
+    evidence: {
+      title: "Why the system recommends this",
+      description: "Supporting evidence behind the action."
+    },
+    aiExplanation: {
+      title: "Ask AI",
+      description: "Need more context? Ask Control Copilot."
+    }
+  },
   executiveSummary: {
     description:
       "Peak dinner pressure is building. CONTROL OS is linking inventory drift, staffing load, and late-shift demand into one recommended operating move.",
@@ -82,6 +118,23 @@ export const demoDashboardData = {
       variant: "destructive"
     }
   ],
+  attentionSignals: [
+    {
+      title: "Inventory variance",
+      sentence: "Grill protein counts are drifting during dinner.",
+      severity: "High"
+    },
+    {
+      title: "Staffing pressure",
+      sentence: "Line coverage is below plan while demand is up.",
+      severity: "Medium"
+    },
+    {
+      title: "Refund approvals",
+      sentence: "High-value voids are clustering late in service.",
+      severity: "Medium"
+    }
+  ],
   risks: [
     {
       title: "Inventory variance on grill proteins",
@@ -108,12 +161,12 @@ export const demoDashboardData = {
     }
   ],
   prediction: {
-    description: "Operational risk forecast for the next 90 minutes.",
-    probabilityLabel: "Late-shift disruption probability",
+    description: "Next 90 minutes.",
+    probabilityLabel: "Disruption risk",
     probability: 72,
     probabilityDisplay: "72%",
     explanation:
-      "Without intervention, ticket times are likely to rise after 7:30 PM as grill inventory checks compete with order recovery and manager approvals.",
+      "Risk rises after 7:30 PM if inventory checks and manager approvals compete with order recovery.",
     signals: [
       { label: "Demand", value: "24% above plan" },
       { label: "Coverage", value: "1 station uncovered" },
@@ -178,14 +231,17 @@ export const demoDashboardData = {
   ],
   recommendation: {
     title: "Rebalance the shift before 7:15 PM",
+    reason:
+      "Demand is above plan while grill inventory variance and staff load are both elevated.",
     description:
-      "Move one cross-trained server to expo support, assign the assistant manager to grill inventory verification, and require approval for high-value voids until close.",
+      "Move one cross-trained server to expo, verify grill protein counts, and require approval for high-value voids until close.",
     expectedImpact: "+8 Control Score points",
     confidence: 82,
-    owner: "Shift lead"
+    owner: "Shift lead",
+    ctaLabel: "Start shift rebalance"
   },
   copilot: {
-    description: "Final explanation layer for the intelligence journey.",
+    description: "Ask Control Copilot for the reasoning behind this action.",
     transcript: [
       {
         speaker: "User",
@@ -230,7 +286,31 @@ export const demoDashboardData = {
     scopeTitle: string;
     scopeDescription: string;
   };
+  demoScope: {
+    restaurantLabel: string;
+    restaurant: string;
+    locationLabel: string;
+    location: string;
+  };
   restaurantContext: readonly { label: string; value: string }[];
+  executiveHero: {
+    restaurantLabel: string;
+    overallHealthLabel: string;
+    overallHealth: string;
+    scoreLabel: string;
+    riskLevelLabel: string;
+    riskLevel: string;
+    dailyDeltaLabel: string;
+    dailyDelta: string;
+    lastUpdateLabel: string;
+    lastUpdate: string;
+  };
+  briefingSections: {
+    keySignals: { title: string; description: string };
+    recommendation: { title: string; description: string };
+    evidence: { title: string; description: string };
+    aiExplanation: { title: string; description: string };
+  };
   executiveSummary: {
     description: string;
     badge: string;
@@ -257,6 +337,11 @@ export const demoDashboardData = {
     status?: string;
     tone?: DemoStatusTone;
   }[];
+  attentionSignals: readonly {
+    title: string;
+    sentence: string;
+    severity: string;
+  }[];
   risks: readonly {
     title: string;
     description: string;
@@ -281,10 +366,12 @@ export const demoDashboardData = {
   }[];
   recommendation: {
     title: string;
+    reason: string;
     description: string;
     expectedImpact: string;
     confidence: number;
     owner: string;
+    ctaLabel: string;
   };
   copilot: {
     description: string;

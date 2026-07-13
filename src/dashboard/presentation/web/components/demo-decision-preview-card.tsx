@@ -1,38 +1,60 @@
+import Link from "next/link";
 import { ClipboardCheck } from "lucide-react";
-import { Badge, Card, CardContent, CardHeader, CardTitle, Progress } from "@/components/ui";
+import { useOperationalDemo } from "@/components/app/operational-demo-state";
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Progress } from "@/components/ui";
 import { DemoSignal } from "@/dashboard/presentation/web/components/demo-dashboard-shared";
-import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
 
 export function DemoDecisionPreviewCard() {
-  const { recommendation } = demoDashboardData;
+  const { state, completeAction } = useOperationalDemo();
+  const actionCompleted = state.recommendationStage === "completed";
 
   return (
-    <Card>
+    <Card className="border-primary/50 bg-surface shadow-apple-sm">
       <CardHeader>
-        <div className="flex items-center justify-between gap-3">
-          <CardTitle>Decision Preview</CardTitle>
-          <ClipboardCheck className="size-5 text-success" aria-hidden="true" />
+        <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <CardTitle className="text-xl">Next Best Action</CardTitle>
+          </div>
+          <Badge variant="success" className="w-fit shrink-0">
+            {state.recommendationStage === "completed" ? "Completed" : "+8 Control Score points"}
+          </Badge>
         </div>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="rounded-md border bg-background p-3">
-          <Badge variant="success">Recommended</Badge>
-          <h3 className="mt-3 text-sm font-semibold">{recommendation.title}</h3>
-          <p className="mt-1 text-sm leading-6 text-muted-foreground">
-            {recommendation.description}
-          </p>
-        </div>
-        <div className="rounded-md border bg-background p-3">
-          <div className="flex items-center justify-between gap-3 text-sm">
-            <span className="font-semibold">Confidence</span>
-            <Badge variant="success">{recommendation.confidence}%</Badge>
+      <CardContent className="grid min-w-0 gap-5 p-5 pt-0 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+        <div className="min-w-0 space-y-5">
+          <div className="min-w-0 rounded-md border bg-background p-5">
+            <div className="flex min-w-0 items-center gap-2">
+              <ClipboardCheck className="size-4 text-success" aria-hidden="true" />
+              <h3 className="truncate text-2xl font-semibold tracking-normal">
+                {state.recommendationTitle}
+              </h3>
+            </div>
           </div>
-          <Progress value={recommendation.confidence} className="mt-3" />
+
+          <div className="grid gap-2 text-sm sm:grid-cols-2">
+            <DemoSignal label="Owner" value="Shift lead" />
+            <DemoSignal label="Confidence" value="82%" />
+          </div>
+
+          <div className="min-w-0 rounded-md border bg-background p-4">
+            <p className="text-xs font-semibold uppercase text-muted-foreground">Why this matters</p>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              {state.recommendationDescription}
+            </p>
+            <Progress value={82} className="mt-3" aria-label="Recommendation confidence" />
+          </div>
         </div>
-        <div className="grid gap-2 text-sm sm:grid-cols-2 xl:grid-cols-1">
-          <DemoSignal label="Expected impact" value={recommendation.expectedImpact} />
-          <DemoSignal label="Primary owner" value={recommendation.owner} />
-        </div>
+        <Button
+          type="button"
+          size="lg"
+          className="w-full lg:w-auto"
+          asChild
+          onClick={() => {
+            if (!actionCompleted) completeAction("complete-rebalance");
+          }}
+        >
+          <Link href={actionCompleted ? "/inventory" : "/kitchen"}>{state.recommendationCtaLabel}</Link>
+        </Button>
       </CardContent>
     </Card>
   );

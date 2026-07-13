@@ -7,7 +7,7 @@ export function DemoDashboardBanner() {
 
   return (
     <section className="rounded-lg border bg-surface p-4" aria-label="Dashboard demo mode">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+      <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <StatusChip tone="live">{banner.status}</StatusChip>
@@ -21,9 +21,11 @@ export function DemoDashboardBanner() {
             {banner.description}
           </p>
         </div>
-        <div className="shrink-0 rounded-md border bg-background px-3 py-2 text-sm">
+        <div className="min-w-0 rounded-md border bg-background px-3 py-2 text-sm lg:w-64 lg:shrink-0">
           <p className="font-semibold">{banner.scopeTitle}</p>
-          <p className="mt-1 text-xs text-muted-foreground">{banner.scopeDescription}</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {banner.scopeDescription}
+          </p>
         </div>
       </div>
     </section>

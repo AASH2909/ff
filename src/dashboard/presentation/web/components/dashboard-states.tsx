@@ -1,7 +1,6 @@
-import { AlertTriangle, BarChart3, ShieldAlert } from "lucide-react";
+import { AlertTriangle, BarChart3 } from "lucide-react";
 import { EmptyState } from "@/components/design-system";
 import { Button, Card, CardContent, Skeleton } from "@/components/ui";
-import type { DashboardLoadError } from "@/dashboard/presentation/web/hooks/use-dashboard-intelligence";
 
 export function DashboardLoadingState() {
   return (
@@ -24,8 +23,8 @@ export function DashboardScopeEmptyState() {
     <div className="px-4 pb-8 sm:px-6 lg:px-8">
       <EmptyState
         icon={<BarChart3 />}
-        title="Tenant context required"
-        description="Set a tenant scope to load executive dashboard intelligence."
+        title="Restaurant context required"
+        description="Select a restaurant scope to load live restaurant health."
       />
     </div>
   );
@@ -43,27 +42,26 @@ export function DashboardDataEmptyState() {
 }
 
 export function DashboardErrorState({
-  error,
-  onRetry
+  onRetry,
+  onViewDemo
 }: {
-  error: DashboardLoadError;
   onRetry: () => void;
+  onViewDemo: () => void;
 }) {
-  const icon = error.status === 401 || error.status === 403 ? <ShieldAlert /> : <AlertTriangle />;
-  const title =
-    error.status === 401
-      ? "Session unavailable"
-      : error.status === 403
-        ? "Access restricted"
-        : "Dashboard unavailable";
-
   return (
     <div className="px-4 pb-8 sm:px-6 lg:px-8">
       <EmptyState
-        icon={icon}
-        title={title}
-        description={error.message}
-        action={<Button onClick={onRetry}>Retry</Button>}
+        icon={<AlertTriangle />}
+        title="Unable to load restaurant data."
+        description="Try again or view demo data while the restaurant connection is unavailable."
+        action={
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Button onClick={onRetry}>Retry</Button>
+            <Button variant="secondary" onClick={onViewDemo}>
+              Open demo
+            </Button>
+          </div>
+        }
       />
     </div>
   );

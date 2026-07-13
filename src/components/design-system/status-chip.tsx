@@ -8,6 +8,10 @@ const statusChipVariants = cva(
     variants: {
       tone: {
         neutral: "border-border bg-secondary text-secondary-foreground",
+        info: "border-primary/20 bg-primary/10 text-primary",
+        healthy: "border-success/20 bg-success/10 text-success",
+        warning: "border-warning/30 bg-warning/15 text-warning-foreground",
+        critical: "border-destructive/20 bg-destructive/10 text-destructive",
         live: "border-primary/20 bg-primary/10 text-primary",
         ready: "border-success/20 bg-success/10 text-success",
         rush: "border-warning/30 bg-warning/15 text-warning-foreground",

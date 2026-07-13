@@ -47,9 +47,8 @@ export function DashboardIntelligenceScreen() {
   return (
     <>
       <PageHeading
-        eyebrow="Executive Control"
-        title="Dashboard Intelligence"
-        description="Business health, operational risk, score drivers, and Control Score trends."
+        title="Restaurant Health"
+        description="See what needs attention and what to do next."
       />
       <PageSection className="pb-2 sm:px-6 lg:px-8">
         <DashboardScopeControls
@@ -61,7 +60,9 @@ export function DashboardIntelligenceScreen() {
       </PageSection>
       {state === "idle" ? <DemoDashboardView /> : null}
       {state === "loading" ? <DashboardLoadingState /> : null}
-      {state === "error" && error ? <DashboardErrorState error={error} onRetry={refresh} /> : null}
+      {state === "error" && error ? (
+        <DashboardErrorState onRetry={refresh} onViewDemo={() => updateScope(DEFAULT_SCOPE)} />
+      ) : null}
       {state === "success" && data ? <DashboardDataView data={data} scope={scope} /> : null}
     </>
   );
@@ -94,7 +95,6 @@ function DashboardDataView({
         <OverviewCard overview={data.overview} latest={data.latest.controlScore} />
         <ScoreTrendWidget points={history} />
       </div>
-      <DomainBreakdownWidget domains={domains} />
       <ExecutiveRecommendationsWidget
         scope={{
           tenantId: scope.tenantId,
@@ -102,6 +102,7 @@ function DashboardDataView({
           limit: 8
         }}
       />
+      <DomainBreakdownWidget domains={domains} />
       <div className="grid gap-4 xl:grid-cols-2">
         <DriversWidget
           title="Top Positive Drivers"

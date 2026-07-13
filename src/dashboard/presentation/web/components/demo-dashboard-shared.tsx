@@ -1,33 +1,49 @@
 import { ClipboardCheck, PackageOpen, Users } from "lucide-react";
-import { MetricTile, StatusChip } from "@/components/design-system";
-import { Badge } from "@/components/ui";
+import { StatusChip } from "@/components/design-system";
+import { Badge, Card, CardContent } from "@/components/ui";
 import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
 
-type MetricData = (typeof demoDashboardData.metrics)[number];
+type AttentionSignalData = (typeof demoDashboardData.attentionSignals)[number];
 type SummaryFactData = (typeof demoDashboardData.executiveSummary.facts)[number];
 type ScoreFactorData = (typeof demoDashboardData.controlScore.factors)[number];
 
 export function DemoMetricsRow() {
-  const { metrics } = demoDashboardData;
+  const { attentionSignals } = demoDashboardData;
 
   return (
-    <div className="grid gap-3 md:grid-cols-3">
-      {metrics.map((metric) => (
-        <MetricTile
-          key={metric.label}
-          label={metric.label}
-          value={metric.value}
-          helper={metric.helper}
-          trend={<DemoMetricTrend metric={metric} />}
-        />
+    <div className="flex min-w-0 gap-3 overflow-x-auto pb-2">
+      {attentionSignals.map((signal) => (
+        <div key={signal.title} className="min-w-[240px] shrink-0 flex-1">
+          <ExecutiveSignal signal={signal} />
+        </div>
       ))}
     </div>
   );
 }
 
+function ExecutiveSignal({ signal }: { signal: AttentionSignalData }) {
+  return (
+    <Card className="min-w-0 overflow-hidden">
+      <CardContent className="p-4 sm:p-5">
+        <div className="flex min-w-0 items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="text-base font-semibold">{signal.title}</h3>
+            <p className="mt-2 line-clamp-2 text-sm leading-5 text-muted-foreground">
+              {signal.sentence}
+            </p>
+          </div>
+          <Badge variant="outline" className="w-fit shrink-0">
+            {signal.severity}
+          </Badge>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 export function DemoSignal({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-sm bg-surface px-3 py-2">
+    <div className="min-w-0 rounded-sm bg-surface px-3 py-2">
       <p className="text-xs font-semibold uppercase text-muted-foreground">{label}</p>
       <p className="mt-1 text-sm font-semibold">{value}</p>
     </div>
@@ -36,11 +52,13 @@ export function DemoSignal({ label, value }: { label: string; value: string }) {
 
 export function DemoSummaryFact({ fact }: { fact: SummaryFactData }) {
   return (
-    <div className="rounded-md border bg-background p-3">
+    <div className="min-w-0 rounded-md border bg-background p-3">
       <div className="text-muted-foreground [&_svg]:size-4">
         <DemoSummaryIcon icon={fact.icon} />
       </div>
-      <p className="mt-3 text-xs font-semibold uppercase text-muted-foreground">{fact.label}</p>
+      <p className="mt-3 text-xs font-semibold uppercase text-muted-foreground">
+        {fact.label}
+      </p>
       <p className="mt-1 text-sm font-semibold">{fact.value}</p>
     </div>
   );
@@ -48,9 +66,9 @@ export function DemoSummaryFact({ fact }: { fact: SummaryFactData }) {
 
 export function DemoScoreFactor({ factor }: { factor: ScoreFactorData }) {
   return (
-    <div className="rounded-sm bg-surface p-2">
-      <div className="flex items-center justify-between gap-2">
-        <p className="truncate text-xs font-semibold uppercase text-muted-foreground">
+    <div className="min-w-0 rounded-sm bg-surface p-2">
+      <div className="flex min-w-0 items-center justify-between gap-2">
+        <p className="min-w-0 truncate text-xs font-semibold uppercase text-muted-foreground">
           {factor.label}
         </p>
         <StatusChip tone={factor.tone} className="h-6 px-2">
@@ -59,18 +77,6 @@ export function DemoScoreFactor({ factor }: { factor: ScoreFactorData }) {
       </div>
     </div>
   );
-}
-
-function DemoMetricTrend({ metric }: { metric: MetricData }) {
-  if ("status" in metric && "tone" in metric) {
-    return <StatusChip tone={metric.tone}>{metric.status}</StatusChip>;
-  }
-
-  if ("badge" in metric && "variant" in metric) {
-    return <Badge variant={metric.variant}>{metric.badge}</Badge>;
-  }
-
-  return null;
 }
 
 function DemoSummaryIcon({ icon }: { icon: SummaryFactData["icon"] }) {

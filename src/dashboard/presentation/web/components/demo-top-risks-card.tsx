@@ -7,20 +7,24 @@ export function DemoTopRisksCard() {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between gap-3">
-          <CardTitle>Top Risks</CardTitle>
-          <Badge variant="destructive">{risks.length} active</Badge>
+        <div className="flex min-w-0 items-center justify-between gap-3">
+          <CardTitle className="text-base">Top Risks</CardTitle>
+          <Badge variant="outline" className="shrink-0">
+            {risks.length} active
+          </Badge>
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
         {risks.map((risk) => (
-          <article key={risk.title} className="rounded-md border bg-background p-3">
-            <div className="flex items-start justify-between gap-3">
+          <article key={risk.title} className="min-w-0 rounded-md border bg-background p-3">
+            <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="min-w-0">
                 <h3 className="text-sm font-semibold">{risk.title}</h3>
-                <p className="mt-1 text-sm leading-6 text-muted-foreground">{risk.description}</p>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                  {risk.description}
+                </p>
               </div>
-              <Badge variant={risk.variant} className="shrink-0">
+              <Badge variant="outline" className="w-fit shrink-0">
                 {risk.severity}
               </Badge>
             </div>
