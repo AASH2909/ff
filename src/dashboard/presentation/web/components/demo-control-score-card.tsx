@@ -10,6 +10,7 @@ import {
 } from "@/components/ui";
 import { DemoScoreFactor } from "@/dashboard/presentation/web/components/demo-dashboard-shared";
 import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { t } from "@/localization";
 
 export function DemoControlScoreCard() {
   const { controlScore } = demoDashboardData;
@@ -19,7 +20,7 @@ export function DemoControlScoreCard() {
       <CardHeader>
         <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
-            <CardTitle className="text-base">Control Score Factors</CardTitle>
+            <CardTitle className="text-base">{t("dashboard.controlFactors")}</CardTitle>
             <CardDescription>{controlScore.description}</CardDescription>
           </div>
           <Badge variant="outline" className="w-fit shrink-0">

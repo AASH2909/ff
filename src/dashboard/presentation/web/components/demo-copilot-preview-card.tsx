@@ -9,6 +9,7 @@ import {
   Progress
 } from "@/components/ui";
 import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { t } from "@/localization";
 
 type CopilotMessageData = (typeof demoDashboardData.copilot.transcript)[number];
 
@@ -20,7 +21,7 @@ export function DemoCopilotPreviewCard() {
       <CardHeader>
         <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
-            <CardTitle className="text-base">Need more context?</CardTitle>
+            <CardTitle className="text-base">{t("dashboard.needContext")}</CardTitle>
             <CardDescription>{copilot.description}</CardDescription>
           </div>
           <Badge variant="outline" className="shrink-0">
@@ -29,7 +30,7 @@ export function DemoCopilotPreviewCard() {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <section className="space-y-3" aria-label="Copilot demo transcript">
+        <section className="space-y-3" aria-label={t("dashboard.transcript")}>
           {copilot.transcript.map((message, index) => (
             <CopilotMessage key={`${message.speaker}-${index}`} message={message} />
           ))}
@@ -39,7 +40,7 @@ export function DemoCopilotPreviewCard() {
           <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex min-w-0 items-center gap-2">
               <BrainCircuit className="size-4 text-primary" aria-hidden="true" />
-              <h3 className="text-sm font-semibold">Evidence and confidence</h3>
+              <h3 className="text-sm font-semibold">{t("dashboard.evidenceConfidence")}</h3>
             </div>
             <Badge variant="outline" className="w-fit shrink-0">
               {copilot.confidence}% confidence
@@ -54,7 +55,7 @@ export function DemoCopilotPreviewCard() {
           </div>
           <div className="mt-3 space-y-2">
             <div className="flex min-w-0 items-center justify-between gap-3 text-sm">
-              <span className="font-medium">Copilot confidence</span>
+              <span className="font-medium">{t("dashboard.copilotConfidence")}</span>
               <span className="text-muted-foreground">{copilot.confidence}%</span>
             </div>
             <Progress value={copilot.confidence} />

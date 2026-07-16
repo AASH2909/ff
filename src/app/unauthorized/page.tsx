@@ -2,6 +2,7 @@ import { ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { AppFrame, EmptyState, MobileViewport } from "@/components/design-system";
 import { Button } from "@/components/ui";
+import { t } from "@/localization";
 
 export default function UnauthorizedPage() {
   return (
@@ -9,11 +10,11 @@ export default function UnauthorizedPage() {
       <MobileViewport className="flex min-h-[70dvh] items-center justify-center">
         <EmptyState
           icon={<ShieldAlert />}
-          title="Access restricted"
-          description="Your account does not have permission to open this area."
+          title={t("auth.accessRestricted")}
+          description={t("auth.accessDescription")}
           action={
             <Button asChild variant="secondary">
-              <Link href="/dashboard">Back to dashboard</Link>
+              <Link href="/dashboard">{t("auth.backDashboard")}</Link>
             </Button>
           }
         />

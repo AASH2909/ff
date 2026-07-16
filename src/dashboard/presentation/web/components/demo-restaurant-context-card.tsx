@@ -1,6 +1,7 @@
 import { MapPin } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
 import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { t } from "@/localization";
 
 export function DemoRestaurantContextCard() {
   const { restaurantContext } = demoDashboardData;
@@ -10,8 +11,8 @@ export function DemoRestaurantContextCard() {
       <CardHeader>
         <div className="flex min-w-0 items-start justify-between gap-3">
           <div className="min-w-0">
-            <CardTitle className="text-base">Context</CardTitle>
-            <CardDescription>Sample operating scope for this demo.</CardDescription>
+            <CardTitle className="text-base">{t("dashboard.context")}</CardTitle>
+            <CardDescription>{t("dashboard.contextDescription")}</CardDescription>
           </div>
           <MapPin className="size-5 text-muted-foreground" aria-hidden="true" />
         </div>

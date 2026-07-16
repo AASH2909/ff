@@ -1,5 +1,6 @@
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
 import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { t } from "@/localization";
 
 export function DemoIntelligenceJourneyCard() {
   const { intelligenceJourney } = demoDashboardData;
@@ -9,18 +10,18 @@ export function DemoIntelligenceJourneyCard() {
       <CardHeader>
         <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
-            <CardTitle className="text-base">Signal Chain</CardTitle>
-            <CardDescription>How the demo connects risk, prediction, decision, and Copilot.</CardDescription>
+            <CardTitle className="text-base">{t("dashboard.signalChain")}</CardTitle>
+            <CardDescription>{t("dashboard.signalChainDescription")}</CardDescription>
           </div>
           <Badge variant="outline" className="w-fit shrink-0">
-            Connected
+            {t("dashboard.connected")}
           </Badge>
         </div>
       </CardHeader>
       <CardContent>
         <ol
           className="flex min-w-0 snap-x gap-3 overflow-x-auto pb-2"
-          aria-label="Demo intelligence journey from risk signal to Copilot explanation"
+          aria-label={t("dashboard.signalChainDescription")}
         >
           {intelligenceJourney.map((step, index) => (
             <li key={step.label} className="relative w-64 min-w-64 snap-start">
@@ -28,7 +29,7 @@ export function DemoIntelligenceJourneyCard() {
                 <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                   <div className="min-w-0">
                     <p className="text-xs font-semibold uppercase text-muted-foreground">
-                      Step {index + 1}
+                      {t("dashboard.step")} {index + 1}
                     </p>
                     <h3 className="mt-1 text-sm font-semibold">{step.label}</h3>
                   </div>

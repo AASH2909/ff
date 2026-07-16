@@ -5,35 +5,36 @@ import { usePathname } from "next/navigation";
 import { BarChart3, ChefHat, ClipboardList, LayoutDashboard, Settings, ShoppingCart } from "lucide-react";
 import { useOperationalDemo } from "@/components/app/operational-demo-state";
 import { cn } from "@/lib/utils";
+import { t } from "@/localization";
 
 const navigationItems = [
   {
     href: "/dashboard",
-    label: "Dashboard",
+    label: t("nav.dashboard"),
     icon: LayoutDashboard,
     badgeKey: "dashboardAlertCount"
   },
   {
     href: "/pos",
-    label: "POS",
+    label: t("nav.pos"),
     icon: ShoppingCart,
     badgeKey: "posQueueCount"
   },
   {
     href: "/kitchen",
-    label: "Kitchen",
+    label: t("nav.kitchen"),
     icon: ChefHat,
     badgeKey: "kitchenOrderCount"
   },
   {
     href: "/inventory",
-    label: "Inventory",
+    label: t("nav.inventory"),
     icon: ClipboardList,
     badgeKey: "inventoryAlertCount"
   },
   {
     href: "/settings",
-    label: "Settings",
+    label: t("nav.settings"),
     icon: Settings,
     badgeKey: null
   }
@@ -91,7 +92,7 @@ function AppSidebarNavigation() {
         </div>
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold">FastFlow</p>
-          <p className="truncate text-xs text-muted-foreground">Operations</p>
+          <p className="truncate text-xs text-muted-foreground">{t("nav.operations")}</p>
         </div>
       </Link>
 

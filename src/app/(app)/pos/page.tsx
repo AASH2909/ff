@@ -6,8 +6,9 @@ import { PageHeading } from "@/components/app/page-heading";
 import { OperationalContextBanner, useOperationalDemo } from "@/components/app/operational-demo-state";
 import { BottomActionBar, BottomActionGroup, PageSection, StatusChip } from "@/components/design-system";
 import { Button, Card, CardContent, CardHeader, CardTitle, Separator } from "@/components/ui";
+import { t } from "@/localization";
 
-const categories = ["Combos", "Burgers", "Sides", "Drinks"];
+const categories = [t("pages.pos.combos"), t("pages.pos.burgers"), t("pages.pos.sides"), t("pages.pos.drinks")];
 
 export default function PosPage() {
   const { state, completeAction } = useOperationalDemo();
@@ -15,21 +16,21 @@ export default function PosPage() {
   return (
     <>
       <PageHeading
-        eyebrow="Checkout"
-        title="POS"
-        description="Fast order entry surface for front counter and cashier workflows."
-        actions={<StatusChip tone={state.shiftStatus === "completed" ? "ready" : "live"}>{state.shiftStatus === "completed" ? "Review complete" : "Shift open"}</StatusChip>}
+        eyebrow={t("pages.pos.eyebrow")}
+        title={t("pages.pos.title")}
+        description={t("pages.pos.description")}
+        actions={<StatusChip tone={state.shiftStatus === "completed" ? "ready" : "live"}>{state.shiftStatus === "completed" ? t("pages.pos.reviewComplete") : t("pages.pos.shiftOpen")}</StatusChip>}
       />
       <PageSection className="space-y-3 px-4 pb-4 sm:px-6 lg:px-8">
         <OperationalContextBanner
-          title="Current mission"
+          title={t("pages.pos.currentMission")}
           value={state.currentMission}
           detail={state.helperText}
           tone={state.shiftStatus === "completed" ? "healthy" : "info"}
         />
         <div className="rounded-lg border bg-background/70 p-4 text-sm text-muted-foreground">
-          <p className="font-semibold text-foreground">Opened from: {state.openedFrom}</p>
-          <p className="mt-1">The checkout queue is {state.posQueueCount === 0 ? "clear" : "still active"}; the next move is to finish the review and return to the dashboard.</p>
+          <p className="font-semibold text-foreground">{t("pages.pos.openedFrom")} {state.openedFrom}</p>
+          <p className="mt-1">{state.posQueueCount === 0 ? t("pages.pos.queueClear") : t("pages.pos.queueActive")}</p>
         </div>
       </PageSection>
       <PageSection className="grid gap-3 lg:grid-cols-[1fr_360px]">
@@ -43,17 +44,17 @@ export default function PosPage() {
         </div>
         <Card>
           <CardHeader>
-            <CardTitle>Current Order</CardTitle>
+            <CardTitle>{t("pages.pos.currentOrder")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="rounded-md bg-surface p-4 text-sm text-muted-foreground">
               {state.posQueueCount === 0
-                ? "No current order. The next step is to finish the refund review and hand off the shift."
-                : `Queue items are ready for review. ${state.posQueueCount} refund items remain to clear.`}
+                ? t("pages.pos.noOrder")
+                : t("pages.pos.queueRemaining", { count: state.posQueueCount })}
             </div>
             <Separator />
             <div className="flex items-center justify-between text-base font-semibold">
-              <span>Total</span>
+              <span>{t("pages.pos.total")}</span>
               <span>${state.posQueueCount === 0 ? "0.00" : "24.00"}</span>
             </div>
           </CardContent>
@@ -61,9 +62,9 @@ export default function PosPage() {
       </PageSection>
       <BottomActionBar>
         <BottomActionGroup>
-          <Button variant="secondary"><ScanLine className="size-4" /> Scan</Button>
+          <Button variant="secondary"><ScanLine className="size-4" /> {t("pages.pos.scan")}</Button>
           <Button asChild onClick={() => completeAction("complete-refund-review")}>
-            <Link href="/dashboard">Finish review</Link>
+            <Link href="/dashboard">{t("pages.pos.finishReview")}</Link>
           </Button>
         </BottomActionGroup>
       </BottomActionBar>

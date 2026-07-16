@@ -1,6 +1,7 @@
 import { LogIn } from "lucide-react";
 import { AppFrame, EmptyState, MobileViewport } from "@/components/design-system";
 import { Button } from "@/components/ui";
+import { t } from "@/localization";
 
 export default function LoginPage() {
   return (
@@ -8,9 +9,9 @@ export default function LoginPage() {
       <MobileViewport className="flex min-h-[70dvh] items-center justify-center">
         <EmptyState
           icon={<LogIn />}
-          title="Sign in required"
-          description="Connect this screen to Supabase Auth when the login flow is ready."
-          action={<Button>Continue</Button>}
+          title={t("auth.signInRequired")}
+          description={t("auth.signInDescription")}
+          action={<Button>{t("auth.continue")}</Button>}
         />
       </MobileViewport>
     </AppFrame>

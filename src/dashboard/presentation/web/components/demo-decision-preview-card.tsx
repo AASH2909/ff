@@ -3,6 +3,7 @@ import { ClipboardCheck } from "lucide-react";
 import { useOperationalDemo } from "@/components/app/operational-demo-state";
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Progress } from "@/components/ui";
 import { DemoSignal } from "@/dashboard/presentation/web/components/demo-dashboard-shared";
+import { t } from "@/localization";
 
 export function DemoDecisionPreviewCard() {
   const { state, completeAction } = useOperationalDemo();
@@ -13,10 +14,10 @@ export function DemoDecisionPreviewCard() {
       <CardHeader>
         <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
-            <CardTitle className="text-xl">Next Best Action</CardTitle>
+            <CardTitle className="text-xl">{t("dashboard.nextBestAction")}</CardTitle>
           </div>
           <Badge variant="success" className="w-fit shrink-0">
-            {state.recommendationStage === "completed" ? "Completed" : "+8 Control Score points"}
+            {state.recommendationStage === "completed" ? t("dashboard.completed") : t("dashboard.controlScorePoints")}
           </Badge>
         </div>
       </CardHeader>
@@ -32,16 +33,16 @@ export function DemoDecisionPreviewCard() {
           </div>
 
           <div className="grid gap-2 text-sm sm:grid-cols-2">
-            <DemoSignal label="Owner" value="Shift lead" />
-            <DemoSignal label="Confidence" value="82%" />
+            <DemoSignal label={t("dashboard.owner")} value={t("dashboard.shiftLead")} />
+            <DemoSignal label={t("dashboard.confidence")} value="82%" />
           </div>
 
           <div className="min-w-0 rounded-md border bg-background p-4">
-            <p className="text-xs font-semibold uppercase text-muted-foreground">Why this matters</p>
+            <p className="text-xs font-semibold uppercase text-muted-foreground">{t("dashboard.whyMatters")}</p>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               {state.recommendationDescription}
             </p>
-            <Progress value={82} className="mt-3" aria-label="Recommendation confidence" />
+            <Progress value={82} className="mt-3" aria-label={t("dashboard.recommendationConfidence")} />
           </div>
         </div>
         <Button

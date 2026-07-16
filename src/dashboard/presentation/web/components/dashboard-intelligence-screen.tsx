@@ -19,6 +19,7 @@ import { ScoreTrendWidget } from "@/dashboard/presentation/web/components/score-
 import type { DashboardHistoryQuery } from "@/dashboard/presentation/web/api/dashboard-api-client";
 import { useDashboardIntelligence } from "@/dashboard/presentation/web/hooks/use-dashboard-intelligence";
 import { ExecutiveRecommendationsWidget } from "@/recommendation/presentation/web/components/executive-recommendations-widget";
+import { t } from "@/localization";
 
 const DASHBOARD_SCOPE_STORAGE_KEY = "controlos.dashboard.scope";
 const DEFAULT_HISTORY_LIMIT = 12;
@@ -47,8 +48,8 @@ export function DashboardIntelligenceScreen() {
   return (
     <>
       <PageHeading
-        title="Restaurant Health"
-        description="See what needs attention and what to do next."
+        title={t("dashboard.restaurantHealth")}
+        description={t("dashboard.description")}
       />
       <PageSection className="pb-2 sm:px-6 lg:px-8">
         <DashboardScopeControls

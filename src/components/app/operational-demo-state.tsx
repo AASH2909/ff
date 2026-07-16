@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { StatusChip } from "@/components/design-system";
+import { t } from "@/localization";
 
 export type OperationalDemoRecommendationStage = "active" | "completed";
 export type OperationalDemoVariance = "warning" | "healthy";
@@ -41,13 +42,12 @@ export const initialOperationalDemoState: OperationalDemoState = {
   kitchenLoad: "rush",
   shiftStatus: "active",
   recommendationStage: "active",
-  currentMission: "Rebalance the evening shift before 7:15 PM",
-  openedFrom: "Inventory variance detected",
-  helperText: "Inventory drift and staffing pressure are converging at the dinner peak.",
-  recommendationTitle: "Rebalance the shift before 7:15 PM",
-  recommendationDescription:
-    "Move one cross-trained server to expo, verify grill protein counts, and hold high-value refunds for review until close.",
-  recommendationCtaLabel: "Start shift rebalance",
+  currentMission: t("demo.initialMission"),
+  openedFrom: t("demo.initialOpenedFrom"),
+  helperText: t("demo.initialHelper"),
+  recommendationTitle: t("demo.initialRecommendation"),
+  recommendationDescription: t("demo.initialDescription"),
+  recommendationCtaLabel: t("demo.startRebalance"),
   dashboardAlertCount: 3,
   kitchenOrderCount: 11,
   inventoryAlertCount: 9,
@@ -69,13 +69,12 @@ export function applyOperationalDemoAction(
         kitchenLoad: "steady",
         shiftStatus: "completed",
         recommendationStage: "completed",
-        currentMission: "Complete the shift handoff and confirm inventory health",
-        openedFrom: "Shift rebalance completed",
-        helperText: "The line is now stable and the team is ready for the handoff.",
-        recommendationTitle: "Shift handoff is ready",
-        recommendationDescription:
-          "The kitchen is steady and inventory is aligned. Review the next support task in inventory.",
-        recommendationCtaLabel: "Open inventory",
+        currentMission: t("demo.handoffMission"),
+        openedFrom: t("demo.rebalanceCompleted"),
+        helperText: t("demo.handoffHelper"),
+        recommendationTitle: t("demo.handoffReady"),
+        recommendationDescription: t("demo.handoffDescription"),
+        recommendationCtaLabel: t("demo.openInventory"),
         dashboardAlertCount: 1,
         kitchenOrderCount: 4,
         inventoryAlertCount: 4,
@@ -89,13 +88,12 @@ export function applyOperationalDemoAction(
         kitchenLoad: "steady",
         shiftStatus: "reviewed",
         recommendationStage: "completed",
-        currentMission: "Confirm the refund queue and close the service review",
-        openedFrom: "Inventory audit completed",
-        helperText: "The watched ingredients are healthy and the refund queue is now manageable.",
-        recommendationTitle: "Inventory is healthy",
-        recommendationDescription:
-          "The watched ingredients are stable. Open the checkout review to clear the refund queue.",
-        recommendationCtaLabel: "Open POS",
+        currentMission: t("demo.refundMission"),
+        openedFrom: t("demo.auditCompleted"),
+        helperText: t("demo.auditHelper"),
+        recommendationTitle: t("demo.inventoryHealthy"),
+        recommendationDescription: t("demo.inventoryDescription"),
+        recommendationCtaLabel: t("demo.openPos"),
         dashboardAlertCount: 1,
         kitchenOrderCount: 4,
         inventoryAlertCount: 2,
@@ -109,13 +107,12 @@ export function applyOperationalDemoAction(
         kitchenLoad: "steady",
         shiftStatus: "reviewed",
         recommendationStage: "completed",
-        currentMission: "Close the service review and hand off the next shift",
-        openedFrom: "Refund review completed",
-        helperText: "Service review is complete and the next shift can start cleanly.",
-        recommendationTitle: "Service review is complete",
-        recommendationDescription:
-          "The refund queue is clear and the team can return to the dashboard for the next move.",
-        recommendationCtaLabel: "Return to dashboard",
+        currentMission: t("demo.closeMission"),
+        openedFrom: t("demo.refundCompleted"),
+        helperText: t("demo.reviewHelper"),
+        recommendationTitle: t("demo.reviewComplete"),
+        recommendationDescription: t("demo.reviewDescription"),
+        recommendationCtaLabel: t("demo.returnDashboard"),
         dashboardAlertCount: 1,
         kitchenOrderCount: 3,
         inventoryAlertCount: 2,
@@ -170,7 +167,7 @@ export function OperationalContextBanner({
           {detail ? <p className="mt-1 text-sm text-muted-foreground">{detail}</p> : null}
         </div>
         <StatusChip tone={tone} className="shrink-0">
-          {tone === "healthy" ? "Healthy" : tone === "warning" ? "Warning" : tone === "critical" ? "Critical" : "Info"}
+          {tone === "healthy" ? t("status.healthy") : tone === "warning" ? t("status.warning") : tone === "critical" ? t("status.critical") : t("status.info")}
         </StatusChip>
       </div>
     </div>

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui";
 import { DemoSignal } from "@/dashboard/presentation/web/components/demo-dashboard-shared";
 import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { t } from "@/localization";
 
 export function DemoPredictionPreviewCard() {
   const { prediction } = demoDashboardData;
@@ -19,7 +20,7 @@ export function DemoPredictionPreviewCard() {
       <CardHeader>
         <div className="flex min-w-0 items-start justify-between gap-3">
           <div className="min-w-0">
-            <CardTitle className="text-base">Risk Forecast</CardTitle>
+            <CardTitle className="text-base">{t("dashboard.riskForecast")}</CardTitle>
             <CardDescription>{prediction.description}</CardDescription>
           </div>
           <AlertTriangle className="size-5 text-muted-foreground" aria-hidden="true" />

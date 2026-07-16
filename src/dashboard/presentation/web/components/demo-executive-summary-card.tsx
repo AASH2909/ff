@@ -1,6 +1,7 @@
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
 import { DemoSummaryFact } from "@/dashboard/presentation/web/components/demo-dashboard-shared";
 import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { t } from "@/localization";
 
 export function DemoExecutiveSummaryCard() {
   const { executiveSummary } = demoDashboardData;
@@ -10,7 +11,7 @@ export function DemoExecutiveSummaryCard() {
       <CardHeader>
         <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
-            <CardTitle>Executive Summary</CardTitle>
+            <CardTitle>{t("dashboard.executiveSummary")}</CardTitle>
             <CardDescription>{executiveSummary.context}</CardDescription>
           </div>
           <Badge variant="secondary" className="w-fit shrink-0">

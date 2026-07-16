@@ -10,6 +10,7 @@
     "prepare": "husky",
     "quality": "pnpm lint && pnpm test && pnpm build",
     "test": "vitest run",
+    "typecheck": "tsc --noEmit",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest"
   },
