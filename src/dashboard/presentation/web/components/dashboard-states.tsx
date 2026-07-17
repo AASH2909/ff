@@ -1,6 +1,7 @@
 import { AlertTriangle, BarChart3 } from "lucide-react";
 import { EmptyState } from "@/components/design-system";
 import { Button, Card, CardContent, Skeleton } from "@/components/ui";
+import { t } from "@/localization";
 
 export function DashboardLoadingState() {
   return (
@@ -23,8 +24,8 @@ export function DashboardScopeEmptyState() {
     <div className="px-4 pb-8 sm:px-6 lg:px-8">
       <EmptyState
         icon={<BarChart3 />}
-        title="Restaurant context required"
-        description="Select a restaurant scope to load live restaurant health."
+        title={t("dashboard.contextRequired")}
+        description={t("dashboard.contextRequiredDescription")}
       />
     </div>
   );
@@ -34,8 +35,8 @@ export function DashboardDataEmptyState() {
   return (
     <EmptyState
       icon={<BarChart3 />}
-      title="No dashboard data"
-      description="Control Score records are not available for the selected scope."
+      title={t("dashboard.noData")}
+      description={t("dashboard.noDataDescription")}
       className="min-h-72"
     />
   );
@@ -52,13 +53,13 @@ export function DashboardErrorState({
     <div className="px-4 pb-8 sm:px-6 lg:px-8">
       <EmptyState
         icon={<AlertTriangle />}
-        title="Unable to load restaurant data."
-        description="Try again or view demo data while the restaurant connection is unavailable."
+        title={t("dashboard.unableLoad")}
+        description={t("dashboard.unableLoadDescription")}
         action={
           <div className="flex flex-col gap-2 sm:flex-row">
-            <Button onClick={onRetry}>Retry</Button>
+            <Button onClick={onRetry}>{t("dashboard.retry")}</Button>
             <Button variant="secondary" onClick={onViewDemo}>
-              Open demo
+              {t("dashboard.openDemo")}
             </Button>
           </div>
         }

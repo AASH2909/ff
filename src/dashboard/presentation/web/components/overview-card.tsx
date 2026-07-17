@@ -8,6 +8,7 @@ import {
   titleCase,
   trendLabel
 } from "@/dashboard/presentation/web/utils/dashboard-formatters";
+import { t } from "@/localization";
 
 type OverviewCardProps = {
   overview: DashboardOverviewDto;
@@ -23,7 +24,7 @@ export function OverviewCard({ overview, latest }: OverviewCardProps) {
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <CardTitle>Control Score</CardTitle>
+            <CardTitle>{t("dashboard.controlScore")}</CardTitle>
             <p className="mt-1 text-sm text-muted-foreground">
               {current.businessUnitName ?? current.businessUnitId}
             </p>
@@ -37,19 +38,19 @@ export function OverviewCard({ overview, latest }: OverviewCardProps) {
         </div>
         <div className="grid content-center gap-3 sm:grid-cols-2 lg:grid-cols-1">
           <ScoreFact
-            label="Previous"
-            value={current.previousScore === null ? "None" : formatScore(current.previousScore)}
-            helper="Prior calculation"
+            label={t("dashboard.previous")}
+            value={current.previousScore === null ? t("dashboard.none") : formatScore(current.previousScore)}
+            helper={t("dashboard.priorCalculation")}
             icon={<Activity className="size-4" />}
           />
           <ScoreFact
-            label="Change"
+            label={t("dashboard.change")}
             value={formatScoreChange(current.scoreChange)}
             helper={trendLabel(latestTrend)}
             icon={current.scoreChange !== null && current.scoreChange < 0 ? <TrendingDown /> : <TrendingUp />}
           />
           <ScoreFact
-            label="Last calculated"
+            label={t("dashboard.lastCalculated")}
             value={formatDateTime(overview.lastCalculationTime)}
             helper={`${formatDateTime(latest.calculatedAt)} latest record`}
             icon={<CalendarClock className="size-4" />}
@@ -92,7 +93,7 @@ function ScoreGauge({ score }: { score: number }) {
       </svg>
       <div className="absolute text-center">
         <p className="text-5xl font-semibold tracking-normal">{formatScore(score)}</p>
-        <p className="mt-1 text-xs font-semibold uppercase text-muted-foreground">of 100</p>
+        <p className="mt-1 text-xs font-semibold uppercase text-muted-foreground">{t("dashboard.of100")}</p>
       </div>
     </div>
   );

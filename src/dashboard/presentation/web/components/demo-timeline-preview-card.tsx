@@ -1,10 +1,10 @@
 import { CalendarClock } from "lucide-react";
 import { Badge, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
-import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { getDemoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
 import { t } from "@/localization";
 
 export function DemoTimelinePreviewCard() {
-  const { timeline } = demoDashboardData;
+  const { timeline } = getDemoDashboardData();
 
   return (
     <Card>

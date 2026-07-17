@@ -1,10 +1,10 @@
 import { MapPin } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
-import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { getDemoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
 import { t } from "@/localization";
 
 export function DemoRestaurantContextCard() {
-  const { restaurantContext } = demoDashboardData;
+  const { restaurantContext } = getDemoDashboardData();
 
   return (
     <Card>

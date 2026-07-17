@@ -1,10 +1,10 @@
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
 import { DemoSummaryFact } from "@/dashboard/presentation/web/components/demo-dashboard-shared";
-import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { getDemoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
 import { t } from "@/localization";
 
 export function DemoExecutiveSummaryCard() {
-  const { executiveSummary } = demoDashboardData;
+  const { executiveSummary } = getDemoDashboardData();
 
   return (
     <Card>

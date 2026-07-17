@@ -1,9 +1,9 @@
 import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
-import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { getDemoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
 import { t } from "@/localization";
 
 export function DemoIntelligenceJourneyCard() {
-  const { intelligenceJourney } = demoDashboardData;
+  const { intelligenceJourney } = getDemoDashboardData();
 
   return (
     <Card>

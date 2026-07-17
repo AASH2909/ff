@@ -4,13 +4,12 @@ import { PageSection, StatusChip } from "@/components/design-system";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import { t } from "@/localization";
 
-const settingsGroups = [
-  { title: t("pages.settings.store"), description: t("pages.settings.storeDescription"), icon: Store },
-  { title: t("pages.settings.team"), description: t("pages.settings.teamDescription"), icon: Users },
-  { title: t("pages.settings.security"), description: t("pages.settings.securityDescription"), icon: ShieldCheck }
-];
-
 export default function SettingsPage() {
+  const settingsGroups = [
+    { title: t("pages.settings.store"), description: t("pages.settings.storeDescription"), icon: Store },
+    { title: t("pages.settings.team"), description: t("pages.settings.teamDescription"), icon: Users },
+    { title: t("pages.settings.security"), description: t("pages.settings.securityDescription"), icon: ShieldCheck }
+  ];
   return (
     <>
       <PageHeading

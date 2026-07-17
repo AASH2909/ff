@@ -2,6 +2,7 @@ import { MinusCircle, PlusCircle } from "lucide-react";
 import type { DashboardInsightDto } from "@/dashboard/application/dtos";
 import { Badge, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import { EmptyState } from "@/components/design-system";
+import { t } from "@/localization";
 import {
   formatContribution,
   insightVariant,
@@ -26,8 +27,8 @@ export function DriversWidget({ title, type, drivers }: DriversWidgetProps) {
         {drivers.length === 0 ? (
           <EmptyState
             icon={icon}
-            title="No drivers"
-            description="No score drivers were returned for this scope."
+            title={t("dashboard.noDrivers")}
+            description={t("dashboard.noDriversDescription")}
             className="min-h-56"
           />
         ) : (

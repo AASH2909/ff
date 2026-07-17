@@ -10,6 +10,7 @@ import {
   severityVariant,
   titleCase
 } from "@/dashboard/presentation/web/utils/dashboard-formatters";
+import { t } from "@/localization";
 
 type InsightsWidgetProps = {
   insights: DashboardInsightsOutputDto;
@@ -27,20 +28,20 @@ export function InsightsWidget({ insights }: InsightsWidgetProps) {
       <CardHeader>
         <div className="flex items-start justify-between gap-3">
           <div>
-            <CardTitle>Insights</CardTitle>
+            <CardTitle>{t("dashboard.insights")}</CardTitle>
             <p className="mt-1 text-sm text-muted-foreground">
-              Score change {formatScoreChange(insights.scoreChange)}
+              {t("dashboard.scoreChangeValue", { change: formatScoreChange(insights.scoreChange) })}
             </p>
           </div>
-          <Badge variant="secondary">Structured</Badge>
+          <Badge variant="secondary">{t("dashboard.structured")}</Badge>
         </div>
       </CardHeader>
       <CardContent>
         {!hasInsights ? (
           <EmptyState
             icon={<BrainCircuit />}
-            title="No insights"
-            description="No structured explanations were returned for this score."
+            title={t("dashboard.noInsights")}
+            description={t("dashboard.noInsightsDescription")}
             className="min-h-64"
           />
         ) : (
@@ -51,7 +52,7 @@ export function InsightsWidget({ insights }: InsightsWidgetProps) {
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <h3 className="truncate text-sm font-semibold">
-                        {explanation.metricName ?? explanation.metricCode ?? "Score explanation"}
+                        {explanation.metricName ?? explanation.metricCode ?? t("dashboard.scoreExplanation")}
                       </h3>
                       <p className="mt-1 text-sm leading-6 text-muted-foreground">
                         {explanation.explanation}
@@ -75,13 +76,13 @@ export function InsightsWidget({ insights }: InsightsWidgetProps) {
             </div>
             <div className="space-y-3">
               <DomainChangePanel
-                title="Improved Domains"
-                emptyLabel="No improved domains"
+                title={t("dashboard.improvedDomains")}
+                emptyLabel={t("dashboard.noImprovedDomains")}
                 changes={insights.improvedDomains}
               />
               <DomainChangePanel
-                title="Deteriorated Domains"
-                emptyLabel="No deteriorated domains"
+                title={t("dashboard.deterioratedDomains")}
+                emptyLabel={t("dashboard.noDeterioratedDomains")}
                 changes={insights.deterioratedDomains}
               />
               <RiskPanel risks={insights.executiveAttentionRisks} />
@@ -117,7 +118,10 @@ function DomainChangePanel({
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium">{change.domainName}</p>
                 <p className="text-xs text-muted-foreground">
-                  {change.previousScore} to {change.currentScore}
+                  {t("dashboard.scoreTransition", {
+                    previous: change.previousScore,
+                    current: change.currentScore
+                  })}
                 </p>
               </div>
               <Badge variant={change.trend === "up" ? "success" : "warning"}>
@@ -136,10 +140,10 @@ function RiskPanel({ risks }: { risks: DashboardInsightsOutputDto["executiveAtte
     <section className="rounded-md border bg-surface p-3">
       <div className="flex items-center gap-2">
         <ShieldAlert className="size-4 text-destructive" aria-hidden="true" />
-        <h3 className="text-sm font-semibold">Executive Risks</h3>
+        <h3 className="text-sm font-semibold">{t("dashboard.executiveRisks")}</h3>
       </div>
       {risks.length === 0 ? (
-        <p className="mt-2 text-sm text-muted-foreground">No executive risks returned.</p>
+        <p className="mt-2 text-sm text-muted-foreground">{t("dashboard.noExecutiveRisks")}</p>
       ) : (
         <div className="mt-3 space-y-2">
           {risks.map((risk) => (

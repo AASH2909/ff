@@ -8,13 +8,13 @@ import {
   CardTitle,
   Progress
 } from "@/components/ui";
-import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { getDemoDashboardData, type DemoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
 import { t } from "@/localization";
 
-type CopilotMessageData = (typeof demoDashboardData.copilot.transcript)[number];
+type CopilotMessageData = DemoDashboardData["copilot"]["transcript"][number];
 
 export function DemoCopilotPreviewCard() {
-  const { copilot } = demoDashboardData;
+  const { copilot } = getDemoDashboardData();
 
   return (
     <Card className="h-full">
@@ -25,7 +25,7 @@ export function DemoCopilotPreviewCard() {
             <CardDescription>{copilot.description}</CardDescription>
           </div>
           <Badge variant="outline" className="shrink-0">
-            Control Copilot
+            {t("dashboard.copilot.productName")}
           </Badge>
         </div>
       </CardHeader>
@@ -43,7 +43,7 @@ export function DemoCopilotPreviewCard() {
               <h3 className="text-sm font-semibold">{t("dashboard.evidenceConfidence")}</h3>
             </div>
             <Badge variant="outline" className="w-fit shrink-0">
-              {copilot.confidence}% confidence
+              {t("dashboard.copilot.confidenceValue", { confidence: copilot.confidence })}
             </Badge>
           </div>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -81,7 +81,7 @@ function CopilotMessage({ message }: { message: CopilotMessageData }) {
         </Badge>
         <p
           className={
-            message.speaker === "User"
+            message.role === "user"
               ? "min-w-0 text-sm font-semibold"
               : "min-w-0 text-sm leading-6 text-muted-foreground"
           }

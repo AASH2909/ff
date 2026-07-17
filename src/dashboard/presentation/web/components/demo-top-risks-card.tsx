@@ -1,9 +1,9 @@
 import { Badge, Card, CardContent, CardHeader, CardTitle, Progress } from "@/components/ui";
-import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { getDemoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
 import { t } from "@/localization";
 
 export function DemoTopRisksCard() {
-  const { risks } = demoDashboardData;
+  const { risks } = getDemoDashboardData();
 
   return (
     <Card>
@@ -11,7 +11,7 @@ export function DemoTopRisksCard() {
         <div className="flex min-w-0 items-center justify-between gap-3">
           <CardTitle className="text-base">{t("dashboard.topRisks")}</CardTitle>
           <Badge variant="outline" className="shrink-0">
-            {risks.length} {t("dashboard.active")}
+            {t("dashboard.activeCount", { count: risks.length })}
           </Badge>
         </div>
       </CardHeader>

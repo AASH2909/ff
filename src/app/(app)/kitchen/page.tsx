@@ -8,14 +8,13 @@ import { PageSection, StatusChip } from "@/components/design-system";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import { t } from "@/localization";
 
-const baseLanes = [
-  { title: t("pages.kitchen.new"), tone: "live" as const, count: 6 },
-  { title: t("pages.kitchen.cooking"), tone: "rush" as const, count: 11 },
-  { title: t("pages.kitchen.ready"), tone: "ready" as const, count: 4 }
-];
-
 export default function KitchenPage() {
   const { state } = useOperationalDemo();
+  const baseLanes = [
+    { title: t("pages.kitchen.new"), tone: "live" as const, count: 6 },
+    { title: t("pages.kitchen.cooking"), tone: "rush" as const, count: 11 },
+    { title: t("pages.kitchen.ready"), tone: "ready" as const, count: 4 }
+  ];
   const lanes =
     state.kitchenLoad === "steady"
       ? [
@@ -42,7 +41,7 @@ export default function KitchenPage() {
         />
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-background/70 p-4">
           <div className="min-w-0">
-            <p className="text-sm font-semibold">Opened from: {state.openedFrom}</p>
+            <p className="text-sm font-semibold">{t("common.openedFrom")} {state.openedFrom}</p>
             <p className="mt-1 text-sm text-muted-foreground">{t("pages.kitchen.handoff")}</p>
           </div>
           <Button asChild size="sm">

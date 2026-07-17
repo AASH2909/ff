@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { StatusChip } from "@/components/design-system";
-import { t } from "@/localization";
+import { t, translateKnownMessage } from "@/localization";
+import { useLocale } from "@/components/app/locale-provider";
 
 export type OperationalDemoRecommendationStage = "active" | "completed";
 export type OperationalDemoVariance = "warning" | "healthy";
@@ -137,12 +138,24 @@ export function OperationalDemoProvider({ children }: { children: React.ReactNod
 
 export function useOperationalDemo() {
   const context = React.useContext(OperationalDemoContext);
+  const { locale } = useLocale();
 
   if (!context) {
     throw new Error("useOperationalDemo must be used within an OperationalDemoProvider");
   }
 
-  return context;
+  const localizedState = {
+    ...context.state,
+    currentMission: translateKnownMessage(context.state.currentMission),
+    openedFrom: translateKnownMessage(context.state.openedFrom),
+    helperText: translateKnownMessage(context.state.helperText),
+    recommendationTitle: translateKnownMessage(context.state.recommendationTitle),
+    recommendationDescription: translateKnownMessage(context.state.recommendationDescription),
+    recommendationCtaLabel: translateKnownMessage(context.state.recommendationCtaLabel)
+  };
+  void locale;
+
+  return { ...context, state: localizedState };
 }
 
 export function OperationalContextBanner({

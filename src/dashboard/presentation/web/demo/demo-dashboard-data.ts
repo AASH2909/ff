@@ -11,270 +11,266 @@ export type DemoStatusTone = "neutral" | "live" | "ready" | "rush" | "blocked";
 
 export type DemoSurface = "background" | "surface";
 
-export const demoDashboardData = {
+export function getDemoDashboardData() {
+ return {
   banner: {
-    status: "CONTROL OS Interactive Demo",
-    badges: ["Sample restaurant", "No production data"],
-    description:
-      "This demo uses Harbor & Pine sample operations data. Real dashboard data appears after a restaurant scope is selected in the application shell.",
-    scopeTitle: "Restaurant scope not selected",
-    scopeDescription: "Demo mode is active."
+    status: t("dashboard.demo.bannerStatus"),
+    badges: [t("dashboard.demo.sampleRestaurant"), t("dashboard.demo.noProductionData")],
+    description: t("dashboard.demo.bannerDescription"),
+    scopeTitle: t("dashboard.demo.scopeNotSelected"),
+    scopeDescription: t("dashboard.demo.modeActive")
   },
   demoScope: {
-    restaurantLabel: "Restaurant",
+    restaurantLabel: t("dashboard.demo.restaurant"),
     restaurant: "Harbor & Pine",
-    locationLabel: "Location",
-    location: "Downtown"
+    locationLabel: t("dashboard.demo.location"),
+    location: t("dashboard.demo.locationValue")
   },
   restaurantContext: [
-    { label: "Restaurant", value: "Harbor & Pine" },
-    { label: "Location", value: "Downtown" },
-    { label: "Shift", value: "Friday dinner" },
-    { label: "Service window", value: "5:30 PM-10:30 PM" },
-    { label: "Guests seated", value: "218" },
-    { label: "Active stations", value: "6" }
+    { label: t("dashboard.demo.restaurant"), value: "Harbor & Pine" },
+    { label: t("dashboard.demo.location"), value: t("dashboard.demo.locationValue") },
+    { label: t("dashboard.demo.shift"), value: t("dashboard.demo.fridayDinner") },
+    { label: t("dashboard.demo.serviceWindow"), value: "5:30 PM-10:30 PM" },
+    { label: t("dashboard.demo.guestsSeated"), value: "218" },
+    { label: t("dashboard.demo.activeStations"), value: "6" }
   ],
   executiveHero: {
-    restaurantLabel: "Restaurant Health",
-    overallHealthLabel: "Overall Health",
-    overallHealth: "Service pressure building",
-    scoreLabel: "Control Score",
-    riskLevelLabel: "Risk Level",
-    riskLevel: "Moderate Risk",
-    dailyDeltaLabel: "Daily Delta",
-    dailyDelta: "▼ 9 since lunch",
-    lastUpdateLabel: "Last update",
+    restaurantLabel: t("dashboard.restaurantHealth"),
+    overallHealthLabel: t("dashboard.overallHealth"),
+    overallHealth: t("dashboard.servicePressure"),
+    scoreLabel: t("dashboard.controlScore"),
+    riskLevelLabel: t("dashboard.riskLevel"),
+    riskLevel: t("dashboard.moderateRisk"),
+    dailyDeltaLabel: t("dashboard.dailyDelta"),
+    dailyDelta: t("dashboard.demo.dailyDeltaValue", { delta: 9 }),
+    lastUpdateLabel: t("dashboard.lastUpdate"),
     lastUpdate: "7:10 PM"
   },
   briefingSections: {
     keySignals: {
-      title: "What needs attention",
-      description: "The three signals that need attention now."
+      title: t("dashboard.demo.attentionTitle"),
+      description: t("dashboard.demo.attentionDescription")
     },
     recommendation: {
-      title: "Next Best Action",
-      description: "The next operating move for this shift."
+      title: t("dashboard.nextBestAction"),
+      description: t("dashboard.demo.recommendationDescription")
     },
     evidence: {
-      title: "Why the system recommends this",
-      description: "Supporting evidence behind the action."
+      title: t("dashboard.demo.evidenceTitle"),
+      description: t("dashboard.demo.evidenceDescription")
     },
     aiExplanation: {
-      title: "Ask AI",
-      description: "Need more context? Ask Control Copilot."
+      title: t("dashboard.askAi"),
+      description: t("dashboard.demo.askDescription")
     }
   },
   executiveSummary: {
-    description:
-      "Peak dinner pressure is building. CONTROL OS is linking inventory drift, staffing load, and late-shift demand into one recommended operating move.",
-    badge: "Sample",
-    context: "Harbor & Pine dinner service, Friday evening.",
+    description: t("dashboard.demo.summaryDescription"),
+    badge: t("dashboard.demo.sample"),
+    context: t("dashboard.demo.summaryContext"),
     signals: [
-      "Risk is concentrated in grill inventory",
-      "Staff load is above plan",
-      "Recommended action is shift rebalance before 7:15 PM"
+      t("dashboard.demo.summarySignalInventory"),
+      t("dashboard.demo.summarySignalStaff"),
+      t("dashboard.demo.summarySignalAction")
     ],
     facts: [
-      { icon: "package", label: "Primary risk", value: "Inventory variance" },
-      { icon: "users", label: "Pressure point", value: "Line coverage" },
-      { icon: "decision", label: "Recommended action", value: "Rebalance shift" }
+      { icon: "package", label: t("dashboard.demo.primaryRisk"), value: t("dashboard.demo.inventoryVariance") },
+      { icon: "users", label: t("dashboard.demo.pressurePoint"), value: t("dashboard.demo.lineCoverage") },
+      { icon: "decision", label: t("dashboard.demo.recommendedAction"), value: t("dashboard.demo.rebalanceShift") }
     ]
   },
   controlScore: {
     value: "64",
     numericValue: 64,
-    status: "At risk",
-    description: "Demo projection for the active evening shift.",
-    helper: "Down 9 points from the lunch baseline.",
-    coverageLabel: "Control coverage",
+    status: t("dashboard.atRisk"),
+    description: t("dashboard.demo.scoreDescription"),
+    helper: t("dashboard.demo.scoreHelper"),
+    coverageLabel: t("dashboard.demo.controlCoverage"),
     coverageValueLabel: "64 / 100",
     factors: [
-      { label: "Inventory", value: "51", tone: "blocked" },
-      { label: "Staffing", value: "58", tone: "rush" },
-      { label: "Payments", value: "86", tone: "ready" },
-      { label: "Kitchen flow", value: "69", tone: "rush" }
+      { label: t("dashboard.demo.inventory"), value: "51", tone: "blocked" },
+      { label: t("dashboard.demo.staffing"), value: "58", tone: "rush" },
+      { label: t("dashboard.demo.payments"), value: "86", tone: "ready" },
+      { label: t("dashboard.demo.kitchenFlow"), value: "69", tone: "rush" }
     ]
   },
   metrics: [
     {
-      label: "Predicted Ops Risk",
+      label: t("dashboard.demo.predictedRisk"),
       value: "72%",
-      helper: "Next 90 minutes, driven by demand and prep variance.",
-      badge: "Rising",
+      helper: t("dashboard.demo.next90Driven"),
+      badge: t("dashboard.demo.rising"),
       variant: "warning"
     },
     {
-      label: "Staff Load",
-      value: "High",
-      helper: "Line coverage is below the dinner rush plan.",
-      status: "Rush",
+      label: t("dashboard.demo.staffLoad"),
+      value: t("dashboard.demo.high"),
+      helper: t("dashboard.demo.lineBelowPlan"),
+      status: t("status.rush"),
       tone: "rush"
     },
     {
-      label: "Inventory Risk",
-      value: "High",
-      helper: "Variance concentrated in grill proteins.",
-      badge: "Watch",
+      label: t("dashboard.demo.inventoryRisk"),
+      value: t("dashboard.demo.high"),
+      helper: t("dashboard.demo.grillVariance"),
+      badge: t("dashboard.demo.watch"),
       variant: "destructive"
     }
   ],
   attentionSignals: [
     {
-      title: "Inventory variance",
-      sentence: "Grill protein counts are drifting during dinner.",
-      severity: "High"
+      title: t("dashboard.demo.attentionInventoryTitle"),
+      sentence: t("dashboard.demo.attentionInventoryText"),
+      severity: t("dashboard.demo.high")
     },
     {
-      title: "Staffing pressure",
-      sentence: "Line coverage is below plan while demand is up.",
-      severity: "Medium"
+      title: t("dashboard.demo.attentionStaffTitle"),
+      sentence: t("dashboard.demo.attentionStaffText"),
+      severity: t("dashboard.demo.medium")
     },
     {
-      title: "Refund approvals",
-      sentence: "High-value voids are clustering late in service.",
-      severity: "Medium"
+      title: t("dashboard.demo.attentionRefundTitle"),
+      sentence: t("dashboard.demo.attentionRefundText"),
+      severity: t("dashboard.demo.medium")
     }
   ],
   risks: [
     {
-      title: "Inventory variance on grill proteins",
-      description:
-        "Steak and salmon counts are drifting from expected prep usage during the dinner rush.",
-      severity: "High",
+      title: t("dashboard.demo.riskInventoryTitle"),
+      description: t("dashboard.demo.riskInventoryText"),
+      severity: t("dashboard.demo.high"),
       progress: 82,
       variant: "destructive"
     },
     {
-      title: "Line capacity under pressure",
-      description:
-        "Two cooks are covering three stations while order volume is 24% above the normal Friday curve.",
-      severity: "Medium",
+      title: t("dashboard.demo.riskCapacityTitle"),
+      description: t("dashboard.demo.riskCapacityText"),
+      severity: t("dashboard.demo.medium"),
       progress: 68,
       variant: "warning"
     },
     {
-      title: "Refund approvals need review",
-      description: "Manager approvals are clustered around table transfers and late-course voids.",
-      severity: "Medium",
+      title: t("dashboard.demo.riskRefundTitle"),
+      description: t("dashboard.demo.riskRefundText"),
+      severity: t("dashboard.demo.medium"),
       progress: 55,
       variant: "warning"
     }
   ],
   prediction: {
-    description: "Next 90 minutes.",
-    probabilityLabel: "Disruption risk",
+    description: t("dashboard.demo.next90"),
+    probabilityLabel: t("dashboard.demo.disruptionRisk"),
     probability: 72,
     probabilityDisplay: "72%",
-    explanation:
-      "Risk rises after 7:30 PM if inventory checks and manager approvals compete with order recovery.",
+    explanation: t("dashboard.demo.forecastExplanation"),
     signals: [
-      { label: "Demand", value: "24% above plan" },
-      { label: "Coverage", value: "1 station uncovered" },
-      { label: "Prep variance", value: "Protein counts drifting" },
-      { label: "Guest impact", value: "Wait times trending up" }
+      { label: t("dashboard.demo.demand"), value: t("dashboard.demo.abovePlan") },
+      { label: t("dashboard.demo.coverage"), value: t("dashboard.demo.stationUncovered") },
+      { label: t("dashboard.demo.prepVariance"), value: t("dashboard.demo.proteinDrifting") },
+      { label: t("dashboard.demo.guestImpact"), value: t("dashboard.demo.waitTimesUp") }
     ]
   },
   timeline: [
     {
       time: "5:40 PM",
-      label: "Dinner rush starts early",
-      detail: "Walk-ins and online orders push kitchen load above plan."
+      label: t("dashboard.timeline.rushTitle"),
+      detail: t("dashboard.timeline.rushText")
     },
     {
       time: "6:25 PM",
-      label: "Inventory signal detected",
-      detail: "Protein usage outpaces completed tickets on two stations."
+      label: t("dashboard.timeline.inventoryTitle"),
+      detail: t("dashboard.timeline.inventoryText")
     },
     {
       time: "7:10 PM",
-      label: "Decision point",
-      detail: "Shift lead can rebalance prep and require approval on high-risk voids."
+      label: t("dashboard.timeline.decisionTitle"),
+      detail: t("dashboard.timeline.decisionText")
     }
   ],
   intelligenceJourney: [
     {
-      label: "Risk Signal",
-      explanation: "Grill inventory variance is rising during the dinner rush.",
-      status: "Detected",
+      label: t("dashboard.signal.risk"),
+      explanation: t("dashboard.signal.riskText"),
+      status: t("dashboard.signal.detected"),
       variant: "destructive"
     },
     {
-      label: "Analytics Context",
-      explanation: "Demand is 24% above plan while line coverage is below target.",
-      status: "Correlated",
+      label: t("dashboard.signal.analytics"),
+      explanation: t("dashboard.signal.analyticsText"),
+      status: t("dashboard.signal.correlated"),
       variant: "secondary"
     },
     {
-      label: "Prediction",
-      explanation: "Late-shift disruption risk reaches 72% if the team does not intervene.",
-      status: "Forecast",
+      label: t("dashboard.signal.prediction"),
+      explanation: t("dashboard.signal.predictionText"),
+      status: t("dashboard.signal.forecast"),
       variant: "warning"
     },
     {
-      label: "Timeline",
-      explanation: "A similar pressure pattern appeared earlier in the week.",
-      status: "Matched",
+      label: t("dashboard.signal.timeline"),
+      explanation: t("dashboard.signal.timelineText"),
+      status: t("dashboard.signal.matched"),
       variant: "outline"
     },
     {
-      label: "Decision",
-      explanation: "Rebalance the shift before 7:15 PM to stabilize service.",
-      status: "Recommended",
+      label: t("dashboard.signal.decision"),
+      explanation: t("dashboard.signal.decisionText"),
+      status: t("dashboard.signal.recommended"),
       variant: "success"
     },
     {
-      label: "Copilot",
-      explanation: "Explains why the score is dropping and what to do next.",
-      status: "Ready",
+      label: t("dashboard.signal.copilot"),
+      explanation: t("dashboard.signal.copilotText"),
+      status: t("dashboard.signal.ready"),
       variant: "default"
     }
   ],
   recommendation: {
-    title: "Rebalance the shift before 7:15 PM",
-    reason:
-      "Demand is above plan while grill inventory variance and staff load are both elevated.",
-    description:
-      "Move one cross-trained server to expo, verify grill protein counts, and require approval for high-value voids until close.",
-    expectedImpact: "+8 Control Score points",
+    title: t("demo.initialRecommendation"),
+    reason: t("demo.initialHelper"),
+    description: t("demo.initialDescription"),
+    expectedImpact: t("dashboard.controlScorePoints"),
     confidence: 82,
-    owner: "Shift lead",
-    ctaLabel: "Start shift rebalance"
+    owner: t("dashboard.shiftLead"),
+    ctaLabel: t("demo.startRebalance")
   },
   copilot: {
-    description: "Ask Control Copilot for the reasoning behind this action.",
+    description: t("dashboard.copilot.description"),
     transcript: [
       {
-        speaker: "User",
-        message: "Why is the score dropping?",
+        role: "user",
+        speaker: t("dashboard.copilot.user"),
+        message: t("dashboard.copilot.questionScore"),
         variant: "outline",
         surface: "background"
       },
       {
-        speaker: "Copilot",
-        message:
-          "The score is falling because dinner demand is rising while grill inventory variance and staff load are both elevated.",
+        role: "copilot",
+        speaker: t("dashboard.copilot.name"),
+        message: t("dashboard.copilot.answerScore"),
         variant: "default",
         surface: "surface"
       },
       {
-        speaker: "User",
-        message: "What should I do first?",
+        role: "user",
+        speaker: t("dashboard.copilot.user"),
+        message: t("dashboard.copilot.questionFirst"),
         variant: "outline",
         surface: "background"
       },
       {
-        speaker: "Copilot",
-        message:
-          "Rebalance the shift before 7:15 PM, verify protein counts, and tighten manager approvals for high-value voids.",
+        role: "copilot",
+        speaker: t("dashboard.copilot.name"),
+        message: t("dashboard.copilot.answerFirst"),
         variant: "default",
         surface: "surface"
       }
     ],
     evidence: [
-      "Analytics Context",
-      "Prediction 72%",
-      "Timeline Pattern",
-      "Decision Scenario"
+      t("dashboard.copilot.evidenceAnalytics"),
+      t("dashboard.copilot.evidencePrediction"),
+      t("dashboard.copilot.evidenceTimeline"),
+      t("dashboard.copilot.evidenceDecision")
     ],
     confidence: 82
   }
@@ -376,7 +372,8 @@ export const demoDashboardData = {
   copilot: {
     description: string;
     transcript: readonly {
-      speaker: "User" | "Copilot";
+      role: "user" | "copilot";
+      speaker: string;
       message: string;
       variant: DemoBadgeVariant;
       surface: DemoSurface;
@@ -385,3 +382,7 @@ export const demoDashboardData = {
     confidence: number;
   };
 };
+}
+
+export type DemoDashboardData = ReturnType<typeof getDemoDashboardData>;
+import { t } from "@/localization";

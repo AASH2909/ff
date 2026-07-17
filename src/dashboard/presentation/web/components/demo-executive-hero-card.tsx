@@ -33,7 +33,7 @@ export function DemoExecutiveHeroCard() {
                 highlight
               />
               <HeroMetric label={t("dashboard.riskLevel")} value={state.inventoryVariance === "healthy" ? t("dashboard.low") : t("dashboard.moderateRisk")} />
-              <HeroMetric label={t("dashboard.dailyDelta")} value={state.controlScore >= 70 ? "▲ 8 today" : "▼ 9 since lunch"} />
+               <HeroMetric label={t("dashboard.dailyDelta")} value={state.controlScore >= 70 ? t("dashboard.demo.dailyDeltaImproved", { delta: 8 }) : t("dashboard.demo.dailyDeltaValue", { delta: 9 })} />
             </div>
           </section>
 
@@ -55,7 +55,7 @@ export function DemoExecutiveHeroCard() {
               <Progress value={state.controlScore} />
             </div>
             <div className="mt-4 grid gap-2 sm:grid-cols-3 xl:grid-cols-1">
-              <ScoreMeta label={t("dashboard.dailyDelta")} value={state.controlScore >= 70 ? "▲ 8 today" : "▼ 9 since lunch"} />
+               <ScoreMeta label={t("dashboard.dailyDelta")} value={state.controlScore >= 70 ? t("dashboard.demo.dailyDeltaImproved", { delta: 8 }) : t("dashboard.demo.dailyDeltaValue", { delta: 9 })} />
               <ScoreMeta label={t("dashboard.riskLevel")} value={state.inventoryVariance === "healthy" ? t("dashboard.low") : t("dashboard.moderateRisk")} />
               <ScoreMeta label={t("dashboard.lastUpdate")} value={t("dashboard.now")} />
             </div>

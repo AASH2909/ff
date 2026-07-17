@@ -10,31 +10,31 @@ import { t } from "@/localization";
 const navigationItems = [
   {
     href: "/dashboard",
-    label: t("nav.dashboard"),
+    labelKey: "nav.dashboard",
     icon: LayoutDashboard,
     badgeKey: "dashboardAlertCount"
   },
   {
     href: "/pos",
-    label: t("nav.pos"),
+    labelKey: "nav.pos",
     icon: ShoppingCart,
     badgeKey: "posQueueCount"
   },
   {
     href: "/kitchen",
-    label: t("nav.kitchen"),
+    labelKey: "nav.kitchen",
     icon: ChefHat,
     badgeKey: "kitchenOrderCount"
   },
   {
     href: "/inventory",
-    label: t("nav.inventory"),
+    labelKey: "nav.inventory",
     icon: ClipboardList,
     badgeKey: "inventoryAlertCount"
   },
   {
     href: "/settings",
-    label: t("nav.settings"),
+    labelKey: "nav.settings",
     icon: Settings,
     badgeKey: null
   }
@@ -66,7 +66,7 @@ function AppBottomNavigation() {
               )}
             >
               <Icon className="size-5" aria-hidden="true" />
-              <span className="max-w-full truncate">{item.label}</span>
+              <span className="max-w-full truncate">{t(item.labelKey)}</span>
               {badgeCount > 0 ? (
                 <span className="absolute right-1 top-1 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground">
                   {badgeCount}
@@ -113,7 +113,7 @@ function AppSidebarNavigation() {
             >
               <span className="flex items-center gap-3">
                 <Icon className="size-4" aria-hidden="true" />
-                {item.label}
+                {t(item.labelKey)}
               </span>
               {badgeCount > 0 ? (
                 <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">

@@ -1,14 +1,14 @@
 import { ClipboardCheck, PackageOpen, Users } from "lucide-react";
 import { StatusChip } from "@/components/design-system";
 import { Badge, Card, CardContent } from "@/components/ui";
-import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { getDemoDashboardData, type DemoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
 
-type AttentionSignalData = (typeof demoDashboardData.attentionSignals)[number];
-type SummaryFactData = (typeof demoDashboardData.executiveSummary.facts)[number];
-type ScoreFactorData = (typeof demoDashboardData.controlScore.factors)[number];
+type AttentionSignalData = DemoDashboardData["attentionSignals"][number];
+type SummaryFactData = DemoDashboardData["executiveSummary"]["facts"][number];
+type ScoreFactorData = DemoDashboardData["controlScore"]["factors"][number];
 
 export function DemoMetricsRow() {
-  const { attentionSignals } = demoDashboardData;
+  const { attentionSignals } = getDemoDashboardData();
 
   return (
     <div className="flex min-w-0 gap-3 overflow-x-auto pb-2">

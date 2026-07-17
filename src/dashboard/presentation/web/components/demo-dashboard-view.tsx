@@ -7,10 +7,10 @@ import { DemoIntelligenceJourneyCard } from "@/dashboard/presentation/web/compon
 import { DemoPredictionPreviewCard } from "@/dashboard/presentation/web/components/demo-prediction-preview-card";
 import { DemoTimelinePreviewCard } from "@/dashboard/presentation/web/components/demo-timeline-preview-card";
 import { DemoTopRisksCard } from "@/dashboard/presentation/web/components/demo-top-risks-card";
-import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { getDemoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
 
 export function DemoDashboardView() {
-  const { briefingSections } = demoDashboardData;
+  const { briefingSections } = getDemoDashboardData();
 
   return (
     <div className="min-w-0 space-y-6 overflow-x-hidden px-4 pb-8 sm:px-6 lg:px-8">

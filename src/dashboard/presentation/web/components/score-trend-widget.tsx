@@ -3,6 +3,7 @@ import type { ScoreTrendPointDto } from "@/dashboard/application/dtos";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import { EmptyState } from "@/components/design-system";
 import { formatDate, formatScore, titleCase } from "@/dashboard/presentation/web/utils/dashboard-formatters";
+import { t } from "@/localization";
 
 type ScoreTrendWidgetProps = {
   points: ScoreTrendPointDto[];
@@ -21,21 +22,21 @@ export function ScoreTrendWidget({ points }: ScoreTrendWidgetProps) {
   return (
     <Card className="min-h-[22rem]">
       <CardHeader>
-        <CardTitle>Score Trend</CardTitle>
+        <CardTitle>{t("dashboard.scoreTrend")}</CardTitle>
       </CardHeader>
       <CardContent>
         {sortedPoints.length === 0 ? (
           <EmptyState
             icon={<LineChart />}
-            title="No history"
-            description="Score history is not available for this scope."
+            title={t("dashboard.noHistory")}
+            description={t("dashboard.noHistoryDescription")}
             className="min-h-64"
           />
         ) : (
           <div className="overflow-hidden rounded-md border bg-surface p-3">
             <svg
               role="img"
-              aria-label="Control Score history"
+              aria-label={t("dashboard.scoreHistory")}
               viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
               className="h-64 w-full"
               preserveAspectRatio="none"

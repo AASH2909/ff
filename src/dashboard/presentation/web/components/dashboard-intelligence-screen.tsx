@@ -106,12 +106,12 @@ function DashboardDataView({
       <DomainBreakdownWidget domains={domains} />
       <div className="grid gap-4 xl:grid-cols-2">
         <DriversWidget
-          title="Top Positive Drivers"
+          title={t("dashboard.topPositiveDrivers")}
           type="positive"
           drivers={data.overview.topPositiveDrivers}
         />
         <DriversWidget
-          title="Top Negative Drivers"
+          title={t("dashboard.topNegativeDrivers")}
           type="negative"
           drivers={data.overview.topNegativeDrivers}
         />

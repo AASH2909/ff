@@ -1,12 +1,13 @@
 import { StatusChip } from "@/components/design-system";
 import { Badge } from "@/components/ui";
-import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { getDemoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { t } from "@/localization";
 
 export function DemoDashboardBanner() {
-  const { banner } = demoDashboardData;
+  const { banner } = getDemoDashboardData();
 
   return (
-    <section className="rounded-lg border bg-surface p-4" aria-label="Dashboard demo mode">
+    <section className="rounded-lg border bg-surface p-4" aria-label={t("dashboard.demoMode")}>
       <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">

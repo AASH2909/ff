@@ -7,6 +7,7 @@ import {
   severityVariant,
   titleCase
 } from "@/dashboard/presentation/web/utils/dashboard-formatters";
+import { t } from "@/localization";
 
 type AlertsWidgetProps = {
   alerts: DashboardAlertDto[];
@@ -17,7 +18,7 @@ export function AlertsWidget({ alerts }: AlertsWidgetProps) {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between gap-3">
-          <CardTitle>Active Alerts</CardTitle>
+          <CardTitle>{t("dashboard.activeAlerts")}</CardTitle>
           <Badge variant="secondary">{alerts.length} active</Badge>
         </div>
       </CardHeader>
@@ -25,8 +26,8 @@ export function AlertsWidget({ alerts }: AlertsWidgetProps) {
         {alerts.length === 0 ? (
           <EmptyState
             icon={<BellRing />}
-            title="No active alerts"
-            description="No active dashboard alerts were returned for this scope."
+            title={t("dashboard.noAlerts")}
+            description={t("dashboard.noAlertsDescription")}
             className="min-h-64"
           />
         ) : (

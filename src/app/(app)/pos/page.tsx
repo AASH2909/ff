@@ -8,10 +8,9 @@ import { BottomActionBar, BottomActionGroup, PageSection, StatusChip } from "@/c
 import { Button, Card, CardContent, CardHeader, CardTitle, Separator } from "@/components/ui";
 import { t } from "@/localization";
 
-const categories = [t("pages.pos.combos"), t("pages.pos.burgers"), t("pages.pos.sides"), t("pages.pos.drinks")];
-
 export default function PosPage() {
   const { state, completeAction } = useOperationalDemo();
+  const categories = [t("pages.pos.combos"), t("pages.pos.burgers"), t("pages.pos.sides"), t("pages.pos.drinks")];
 
   return (
     <>

@@ -8,6 +8,7 @@ import {
   formatScoreChange,
   titleCase
 } from "@/dashboard/presentation/web/utils/dashboard-formatters";
+import { t } from "@/localization";
 
 type DomainBreakdownWidgetProps = {
   domains: DomainScoreDto[];
@@ -18,7 +19,7 @@ export function DomainBreakdownWidget({ domains }: DomainBreakdownWidgetProps) {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between gap-3">
-          <CardTitle>Domain Breakdown</CardTitle>
+          <CardTitle>{t("dashboard.domainBreakdown")}</CardTitle>
           <Badge variant="secondary">{domains.length} domains</Badge>
         </div>
       </CardHeader>
@@ -45,10 +46,10 @@ function DomainCard({ domain }: { domain: DomainScoreDto }) {
       </div>
       <Progress value={domain.score} className="mt-4" />
       <div className="mt-4 grid grid-cols-3 gap-2 text-xs">
-        <DomainMetric label="Weight" value={formatPercent(domain.weight)} />
-        <DomainMetric label="Contribution" value={formatContribution(domain.contribution)} />
+        <DomainMetric label={t("dashboard.weight")} value={formatPercent(domain.weight)} />
+        <DomainMetric label={t("dashboard.contribution")} value={formatContribution(domain.contribution)} />
         <DomainMetric
-          label="Trend"
+          label={t("dashboard.trend")}
           value={formatScoreChange(domain.scoreChange)}
           icon={<TrendIcon trend={domain.trend} />}
         />

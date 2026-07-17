@@ -4,7 +4,8 @@ import * as React from "react";
 import { RefreshCw } from "lucide-react";
 import { Badge, Button, Input, Label } from "@/components/ui";
 import type { DashboardHistoryQuery } from "@/dashboard/presentation/web/api/dashboard-api-client";
-import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { getDemoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { t } from "@/localization";
 
 type DashboardScopeControlsProps = {
   scope: DashboardHistoryQuery;
@@ -49,7 +50,7 @@ export function DashboardScopeControls({
     >
       <div className="space-y-1.5">
         <Label htmlFor="dashboard-tenant-id" className="text-xs">
-          Tenant
+          {t("dashboard.scope.tenant")}
         </Label>
         <Input
           id="dashboard-tenant-id"
@@ -61,18 +62,18 @@ export function DashboardScopeControls({
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="dashboard-business-unit-id" className="text-xs">
-          Business unit
+          {t("dashboard.scope.businessUnit")}
         </Label>
         <Input
           id="dashboard-business-unit-id"
           value={businessUnitId}
           onChange={(event) => setBusinessUnitId(event.target.value)}
-          placeholder="optional"
+          placeholder={t("dashboard.scope.optional")}
           className="h-10"
         />
       </div>
       <Button type="submit" variant="secondary" className="self-end">
-        Apply
+        {t("dashboard.scope.apply")}
       </Button>
       <Button
         type="button"
@@ -80,29 +81,29 @@ export function DashboardScopeControls({
         className="self-end"
         onClick={onRefresh}
         disabled={loading || !scope.tenantId}
-        aria-label="Refresh dashboard"
+        aria-label={t("dashboard.refresh")}
       >
         <RefreshCw className={loading ? "animate-spin" : undefined} />
-        Refresh
+        {t("dashboard.scope.refresh")}
       </Button>
     </form>
   );
 }
 
 function DemoRestaurantScope() {
-  const { demoScope } = demoDashboardData;
+  const { demoScope } = getDemoDashboardData();
 
   return (
     <section
       className="flex min-w-0 flex-col gap-3 rounded-lg border bg-surface p-3 sm:flex-row sm:items-center sm:justify-between"
-      aria-label="Demo restaurant scope"
+      aria-label={t("dashboard.demoScope")}
     >
       <div className="grid min-w-0 gap-3 sm:grid-cols-2">
         <ReadOnlyScopeValue label={demoScope.restaurantLabel} value={demoScope.restaurant} />
         <ReadOnlyScopeValue label={demoScope.locationLabel} value={demoScope.location} />
       </div>
       <Badge variant="outline" className="w-fit shrink-0">
-        Demo data
+        {t("dashboard.scope.demoData")}
       </Badge>
     </section>
   );

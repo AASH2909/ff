@@ -9,11 +9,11 @@ import {
   Progress
 } from "@/components/ui";
 import { DemoSignal } from "@/dashboard/presentation/web/components/demo-dashboard-shared";
-import { demoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
+import { getDemoDashboardData } from "@/dashboard/presentation/web/demo/demo-dashboard-data";
 import { t } from "@/localization";
 
 export function DemoPredictionPreviewCard() {
-  const { prediction } = demoDashboardData;
+  const { prediction } = getDemoDashboardData();
 
   return (
     <Card>
