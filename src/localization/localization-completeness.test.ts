@@ -17,11 +17,13 @@ const visibleGroups = {
   loginAndUnauthorized: ["auth."],
   statuses: ["status."],
   dashboard: ["dashboard."],
-  missionsAndCtas: ["demo."]
+  missionsAndCtas: ["demo."],
+  executiveWorkspace: ["executive."]
 } as const;
 
 const intentionallyLocaleInvariant = new Set<MessageKey>([
-  "nav.pos"
+  "nav.pos",
+  "executive.restaurant.harborPine"
 ]);
 
 function keysFor(prefixes: readonly string[]) {
