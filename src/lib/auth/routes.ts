@@ -1,51 +1,49 @@
-import { ROLES, type Role } from "@/lib/auth/roles";
+import {
+  APP_ROUTE_POLICIES,
+  SUPPORTED_ROLES,
+  canAccessRoute,
+  type UserRole
+} from "@/lib/auth/authorization";
 
 export const AUTH_ROUTES = ["/login", "/signup", "/forgot-password"] as const;
 
-export const PROTECTED_ROUTES = [
+const nonProductProtectedRoutes = [
   {
     path: "/api/v1/dashboard",
-    roles: [ROLES.OWNER, ROLES.ADMIN]
-  },
-  {
-    path: "/dashboard",
-    roles: [ROLES.OWNER, ROLES.ADMIN, ROLES.CASHIER, ROLES.COOK]
+    roles: ["operations-executive", "administrator"]
   },
   {
     path: "/admin",
-    roles: [ROLES.OWNER, ROLES.ADMIN]
+    roles: ["operations-executive", "administrator"]
   },
   {
     path: "/owner",
-    roles: [ROLES.OWNER]
-  },
-  {
-    path: "/pos",
-    roles: [ROLES.OWNER, ROLES.ADMIN, ROLES.CASHIER]
-  },
-  {
-    path: "/kitchen",
-    roles: [ROLES.OWNER, ROLES.ADMIN, ROLES.COOK]
-  },
-  {
-    path: "/inventory",
-    roles: [ROLES.OWNER, ROLES.ADMIN, ROLES.COOK]
-  },
-  {
-    path: "/settings",
-    roles: [ROLES.OWNER, ROLES.ADMIN]
+    roles: ["operations-executive"]
   }
 ] as const satisfies ReadonlyArray<{
   path: string;
-  roles: readonly Role[];
+  roles: readonly UserRole[];
 }>;
 
+const productProtectedRoutes = APP_ROUTE_POLICIES.map(({ path }) => ({
+  path,
+  roles: SUPPORTED_ROLES.filter((role) => canAccessRoute(role, path))
+}));
+
+export const PROTECTED_ROUTES = Object.freeze([
+  ...nonProductProtectedRoutes,
+  ...productProtectedRoutes
+]);
+
 export function isAuthRoute(pathname: string) {
-  return AUTH_ROUTES.some((route) => pathname === route || pathname.startsWith(`${route}/`));
+  return AUTH_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  );
 }
 
 export function getProtectedRoute(pathname: string) {
   return PROTECTED_ROUTES.find(
-    (route) => pathname === route.path || pathname.startsWith(`${route.path}/`)
+    (route) =>
+      pathname === route.path || pathname.startsWith(`${route.path}/`)
   );
 }

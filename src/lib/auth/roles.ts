@@ -1,17 +1,24 @@
-export const ROLES = {
-  OWNER: "OWNER",
-  ADMIN: "ADMIN",
-  CASHIER: "CASHIER",
-  COOK: "COOK"
-} as const;
+import {
+  resolveProductRoleFromLegacySlug,
+  type UserRole
+} from "@/lib/auth/authorization";
 
-export type Role = (typeof ROLES)[keyof typeof ROLES];
+export const ROLES = {
+  OWNER: "operations-executive",
+  ADMIN: "administrator",
+  RESTAURANT_MANAGER: "restaurant-manager",
+  COOK: "kitchen-manager",
+  CASHIER: "cashier"
+} as const satisfies Record<string, UserRole>;
+
+export type Role = UserRole;
 
 const roleSlugByRole = {
-  [ROLES.OWNER]: "owner",
-  [ROLES.ADMIN]: "admin",
-  [ROLES.CASHIER]: "cashier",
-  [ROLES.COOK]: "cook"
+  "operations-executive": "owner",
+  administrator: "admin",
+  "restaurant-manager": "restaurant-manager",
+  "kitchen-manager": "cook",
+  cashier: "cashier"
 } as const satisfies Record<Role, string>;
 
 export function roleToSlug(role: Role) {
@@ -19,15 +26,12 @@ export function roleToSlug(role: Role) {
 }
 
 export function slugToRole(slug: string): Role | null {
-  const role = slug.toUpperCase();
-
-  if (role === ROLES.OWNER || role === ROLES.ADMIN || role === ROLES.CASHIER || role === ROLES.COOK) {
-    return role;
-  }
-
-  return null;
+  return resolveProductRoleFromLegacySlug(slug);
 }
 
-export function hasAllowedRole(userRoles: Role[], allowedRoles: readonly Role[]) {
+export function hasAllowedRole(
+  userRoles: readonly Role[],
+  allowedRoles: readonly Role[]
+) {
   return userRoles.some((role) => allowedRoles.includes(role));
 }

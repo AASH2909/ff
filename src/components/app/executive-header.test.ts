@@ -8,6 +8,8 @@ import {
   writeExecutiveWorkspace
 } from "@/components/app/executive-workspace";
 import { setActiveLocale } from "@/localization";
+import type { CurrentUser } from "@/components/app/current-authorization";
+import type { UserRole } from "@/lib/auth/authorization";
 
 describe("ExecutiveHeaderView", () => {
   it("renders executive identity and workspace context", () => {
@@ -23,18 +25,22 @@ describe("ExecutiveHeaderView", () => {
   });
 
   it("reflects profile updates without changing navigation or demo state", () => {
-    const updated = updateExecutiveWorkspace(defaultExecutiveWorkspace, {
-      displayName: "Alex Morgan"
-    });
-    expect(collectText(ExecutiveHeaderView({ workspace: updated }))).toContain(
+    const updatedUser: CurrentUser = {
+      id: "demo-alex-morgan",
+      displayName: "Alex Morgan",
+      role: "operations-executive"
+    };
+    expect(collectText(ExecutiveHeaderView({
+      workspace: defaultExecutiveWorkspace,
+      currentUser: updatedUser
+    }))).toContain(
       "Alex Morgan"
     );
-    expect(defaultExecutiveWorkspace.displayName).toBe("Maya Chen");
   });
 
   it("renders localized context and survives persistence refresh", () => {
     const stored = updateExecutiveWorkspace(defaultExecutiveWorkspace, {
-      displayName: "Alex Morgan"
+      compactMode: true
     });
     let serialized: string | null = null;
     const storage = {
@@ -48,9 +54,55 @@ describe("ExecutiveHeaderView", () => {
 
     setActiveLocale("ru");
     const text = collectText(ExecutiveHeaderView({ workspace: reloaded }));
-    expect(text).toContain("Alex Morgan");
+    expect(text).toContain("Maya Chen");
     expect(text).toContain("Операционный руководитель");
     expect(text).toContain("Демо-пространство");
+    setActiveLocale("en");
+  });
+
+  it("renders every localized role label from the centralized current user", () => {
+    const expected: Record<UserRole, readonly [string, string]> = {
+      "operations-executive": [
+        "Operations Executive",
+        "Операционный руководитель"
+      ],
+      "restaurant-manager": [
+        "Restaurant Manager",
+        "Управляющий рестораном"
+      ],
+      "kitchen-manager": ["Kitchen Manager", "Руководитель кухни"],
+      cashier: ["Cashier", "Кассир"],
+      administrator: ["Administrator", "Администратор"]
+    };
+
+    for (const [role, [english, russian]] of Object.entries(expected) as [
+      UserRole,
+      readonly [string, string]
+    ][]) {
+      const currentUser = {
+        id: `demo-${role}`,
+        displayName: "Maya Chen",
+        role
+      };
+      setActiveLocale("en");
+      expect(
+        collectText(
+          ExecutiveHeaderView({
+            workspace: defaultExecutiveWorkspace,
+            currentUser
+          })
+        )
+      ).toContain(english);
+      setActiveLocale("ru");
+      expect(
+        collectText(
+          ExecutiveHeaderView({
+            workspace: defaultExecutiveWorkspace,
+            currentUser
+          })
+        )
+      ).toContain(russian);
+    }
     setActiveLocale("en");
   });
 });

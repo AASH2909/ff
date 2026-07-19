@@ -36,6 +36,7 @@ export const ru = {
   "pages.inventory.eyebrow": "Склад",
   "pages.inventory.description": "Следите за наличием, низкими остатками и важными для приготовления ингредиентами.",
   "pages.inventory.openPos": "Открыть проверку кассы",
+  "pages.inventory.completeAudit": "Завершить аудит запасов",
   "pages.inventory.currentMission": "Текущая задача",
   "pages.inventory.openedFrom": "Открыто из:",
   "pages.inventory.stableNext": "Контролируемые ингредиенты стабильны; далее проверьте очередь возвратов в кассе.",
@@ -296,6 +297,11 @@ export const ru = {
   "auth.accessRestricted": "Доступ ограничен",
   "auth.accessDescription": "У вашей учётной записи нет разрешения открыть этот раздел.",
   "auth.backDashboard": "Вернуться на панель"
+  ,"auth.role.operationsExecutive": "Операционный руководитель"
+  ,"auth.role.restaurantManager": "Управляющий рестораном"
+  ,"auth.role.kitchenManager": "Руководитель кухни"
+  ,"auth.role.cashier": "Кассир"
+  ,"auth.role.administrator": "Администратор"
   ,"demo.initialMission": "Перераспределить вечернюю смену до 19:15"
   ,"demo.initialOpenedFrom": "Обнаружено расхождение запасов"
   ,"demo.initialHelper": "Расхождение запасов и нагрузка на персонал сходятся в пик ужина."

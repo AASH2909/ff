@@ -3,8 +3,6 @@ import type { Locale } from "@/localization";
 export const EXECUTIVE_WORKSPACE_STORAGE_KEY = "fastflow.executive-workspace";
 
 export type ExecutiveWorkspace = Readonly<{
-  displayName: string;
-  role: "operations-executive";
   workspace: "demo-workspace";
   restaurant: "harbor-and-pine";
   location: "downtown";
@@ -19,8 +17,6 @@ export type ExecutiveWorkspace = Readonly<{
 export type ExecutiveWorkspaceStorage = Pick<Storage, "getItem" | "setItem">;
 
 export const defaultExecutiveWorkspace: ExecutiveWorkspace = Object.freeze({
-  displayName: "Maya Chen",
-  role: "operations-executive",
   workspace: "demo-workspace",
   restaurant: "harbor-and-pine",
   location: "downtown",
@@ -48,11 +44,27 @@ export function readExecutiveWorkspace(
     if (!rawValue) return defaultExecutiveWorkspace;
     const candidate: unknown = JSON.parse(rawValue);
     return isExecutiveWorkspace(candidate)
-      ? Object.freeze({ ...candidate })
+      ? Object.freeze(toExecutiveWorkspace(candidate))
       : defaultExecutiveWorkspace;
   } catch {
     return defaultExecutiveWorkspace;
   }
+}
+
+function toExecutiveWorkspace(
+  candidate: ExecutiveWorkspace
+): ExecutiveWorkspace {
+  return {
+    workspace: candidate.workspace,
+    restaurant: candidate.restaurant,
+    location: candidate.location,
+    activeShift: candidate.activeShift,
+    operationalMode: candidate.operationalMode,
+    preferredDashboardScope: candidate.preferredDashboardScope,
+    preferredLocale: candidate.preferredLocale,
+    compactMode: candidate.compactMode,
+    notificationsEnabled: candidate.notificationsEnabled
+  };
 }
 
 export function writeExecutiveWorkspace(
@@ -71,9 +83,6 @@ function isExecutiveWorkspace(value: unknown): value is ExecutiveWorkspace {
   const candidate = value as Record<string, unknown>;
 
   return (
-    typeof candidate.displayName === "string" &&
-    candidate.displayName.trim().length > 0 &&
-    candidate.role === "operations-executive" &&
     candidate.workspace === "demo-workspace" &&
     candidate.restaurant === "harbor-and-pine" &&
     candidate.location === "downtown" &&

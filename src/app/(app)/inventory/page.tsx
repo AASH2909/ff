@@ -7,9 +7,15 @@ import { OperationalContextBanner, useOperationalDemo } from "@/components/app/o
 import { MetricTile, PageSection, StatusChip } from "@/components/design-system";
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import { t } from "@/localization";
+import { useCurrentAuthorization } from "@/components/app/current-authorization-provider";
 
 export default function InventoryPage() {
   const { state, completeAction } = useOperationalDemo();
+  const { defaultRoute, hasPermission } = useCurrentAuthorization();
+  const canAudit =
+    hasPermission("inventory:audit") &&
+    hasPermission("operational-demo:advance");
+  const canOpenPos = hasPermission("pos:view");
 
   return (
     <>
@@ -17,7 +23,7 @@ export default function InventoryPage() {
         eyebrow={t("pages.inventory.eyebrow")}
         title={t("pages.inventory.title")}
         description={t("pages.inventory.description")}
-        actions={<Button size="sm" variant="secondary" asChild onClick={() => completeAction("complete-inventory-audit")}><Link href="/pos">{t("pages.inventory.openPos")}</Link></Button>}
+        actions={canAudit ? <Button size="sm" variant="secondary" asChild onClick={() => completeAction("complete-inventory-audit")}><Link href={canOpenPos ? "/pos" : defaultRoute}>{canOpenPos ? t("pages.inventory.openPos") : t("pages.inventory.completeAudit")}</Link></Button> : undefined}
       />
       <PageSection className="space-y-3 px-4 pb-4 sm:px-6 lg:px-8">
         <OperationalContextBanner

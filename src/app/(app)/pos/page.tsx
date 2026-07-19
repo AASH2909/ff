@@ -7,9 +7,14 @@ import { OperationalContextBanner, useOperationalDemo } from "@/components/app/o
 import { BottomActionBar, BottomActionGroup, PageSection, StatusChip } from "@/components/design-system";
 import { Button, Card, CardContent, CardHeader, CardTitle, Separator } from "@/components/ui";
 import { t } from "@/localization";
+import { useCurrentAuthorization } from "@/components/app/current-authorization-provider";
 
 export default function PosPage() {
   const { state, completeAction } = useOperationalDemo();
+  const { defaultRoute, hasPermission } = useCurrentAuthorization();
+  const canCompleteReview =
+    hasPermission("pos:operate") &&
+    hasPermission("operational-demo:advance");
   const categories = [t("pages.pos.combos"), t("pages.pos.burgers"), t("pages.pos.sides"), t("pages.pos.drinks")];
 
   return (
@@ -62,9 +67,11 @@ export default function PosPage() {
       <BottomActionBar>
         <BottomActionGroup>
           <Button variant="secondary"><ScanLine className="size-4" /> {t("pages.pos.scan")}</Button>
-          <Button asChild onClick={() => completeAction("complete-refund-review")}>
-            <Link href="/dashboard">{t("pages.pos.finishReview")}</Link>
-          </Button>
+          {canCompleteReview ? (
+            <Button asChild onClick={() => completeAction("complete-refund-review")}>
+              <Link href={hasPermission("dashboard:view") ? "/dashboard" : defaultRoute}>{t("pages.pos.finishReview")}</Link>
+            </Button>
+          ) : null}
         </BottomActionGroup>
       </BottomActionBar>
     </>

@@ -4,10 +4,15 @@ import { useOperationalDemo } from "@/components/app/operational-demo-state";
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Progress } from "@/components/ui";
 import { DemoSignal } from "@/dashboard/presentation/web/components/demo-dashboard-shared";
 import { t } from "@/localization";
+import { useCurrentAuthorization } from "@/components/app/current-authorization-provider";
 
 export function DemoDecisionPreviewCard() {
   const { state, completeAction } = useOperationalDemo();
+  const { hasPermission } = useCurrentAuthorization();
   const actionCompleted = state.recommendationStage === "completed";
+  const canAdvance =
+    hasPermission("kitchen:operate") &&
+    hasPermission("operational-demo:advance");
 
   return (
     <Card className="border-primary/50 bg-surface shadow-apple-sm">
@@ -45,17 +50,19 @@ export function DemoDecisionPreviewCard() {
             <Progress value={82} className="mt-3" aria-label={t("dashboard.recommendationConfidence")} />
           </div>
         </div>
-        <Button
-          type="button"
-          size="lg"
-          className="w-full lg:w-auto"
-          asChild
-          onClick={() => {
-            if (!actionCompleted) completeAction("complete-rebalance");
-          }}
-        >
-          <Link href={actionCompleted ? "/inventory" : "/kitchen"}>{state.recommendationCtaLabel}</Link>
-        </Button>
+        {canAdvance ? (
+          <Button
+            type="button"
+            size="lg"
+            className="w-full lg:w-auto"
+            asChild
+            onClick={() => {
+              if (!actionCompleted) completeAction("complete-rebalance");
+            }}
+          >
+            <Link href={actionCompleted ? "/inventory" : "/kitchen"}>{state.recommendationCtaLabel}</Link>
+          </Button>
+        ) : null}
       </CardContent>
     </Card>
   );

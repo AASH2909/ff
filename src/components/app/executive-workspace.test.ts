@@ -15,8 +15,6 @@ import { setActiveLocale, t } from "@/localization";
 describe("executive workspace model", () => {
   it("provides an immutable default executive profile and dashboard preferences", () => {
     expect(defaultExecutiveWorkspace).toMatchObject({
-      displayName: "Maya Chen",
-      role: "operations-executive",
       workspace: "demo-workspace",
       activeShift: "dinner",
       operationalMode: "monitoring",
@@ -31,7 +29,6 @@ describe("executive workspace model", () => {
   it("persists and reloads one validated workspace value", () => {
     const storage = createStorage();
     const updated = updateExecutiveWorkspace(defaultExecutiveWorkspace, {
-      displayName: "Alex Morgan",
       preferredDashboardScope: "restaurant"
     });
 
@@ -49,17 +46,17 @@ describe("executive workspace model", () => {
     expect(readExecutiveWorkspace(undefined)).toBe(defaultExecutiveWorkspace);
     expect(readExecutiveWorkspace(createStorage("{"))).toBe(defaultExecutiveWorkspace);
     expect(
-      readExecutiveWorkspace(createStorage(JSON.stringify({ displayName: 42 })))
+      readExecutiveWorkspace(createStorage(JSON.stringify({ workspace: 42 })))
     ).toBe(defaultExecutiveWorkspace);
   });
 
   it("updates without mutating the default or current model", () => {
     const current = structuredClone(defaultExecutiveWorkspace);
-    const updated = updateExecutiveWorkspace(current, { displayName: "Alex Morgan" });
+    const updated = updateExecutiveWorkspace(current, { compactMode: true });
 
     expect(updated).not.toBe(current);
     expect(current).toEqual(defaultExecutiveWorkspace);
-    expect(defaultExecutiveWorkspace.displayName).toBe("Maya Chen");
+    expect(defaultExecutiveWorkspace.compactMode).toBe(false);
   });
 
   it("does not alter locale, progressed operational state, or reset defaults", () => {
