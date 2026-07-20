@@ -4,6 +4,8 @@ export type CurrentUser = Readonly<{
   id: string;
   displayName: string;
   role: UserRole;
+  authenticatedRole?: UserRole;
+  previewRole?: UserRole | null;
 }>;
 
 export const defaultCurrentUser: CurrentUser = Object.freeze({

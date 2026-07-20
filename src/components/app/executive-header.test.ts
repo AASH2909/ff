@@ -68,7 +68,7 @@ describe("ExecutiveHeaderView", () => {
       ],
       "restaurant-manager": [
         "Restaurant Manager",
-        "Управляющий рестораном"
+        "Руководитель ресторана"
       ],
       "kitchen-manager": ["Kitchen Manager", "Руководитель кухни"],
       cashier: ["Cashier", "Кассир"],

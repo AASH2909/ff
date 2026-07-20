@@ -1,32 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { UserRole } from "@/lib/auth/authorization";
 
 const mocks = vi.hoisted(() => ({
   getCurrentUser: vi.fn(),
-  getRolesForUser: vi.fn()
+  getRolesForUser: vi.fn(),
+  repositoriesAvailable: true
 }));
 
 vi.mock("@/repositories/middleware", () => ({
-  createMiddlewareRepositories: (request: NextRequest) => ({
-    response: NextResponse.next({ request }),
-    repositories: {
-      authRepository: {
-        getCurrentUser: mocks.getCurrentUser
-      },
-      userRoleRepository: {
-        getRolesForUser: mocks.getRolesForUser
-      }
-    }
-  })
+  createMiddlewareRepositories: (request: NextRequest) => {
+    const response = NextResponse.next({ request });
+    return {
+      response,
+      repositories: mocks.repositoriesAvailable
+        ? {
+            authRepository: {
+              getCurrentUser: mocks.getCurrentUser
+            },
+            userRoleRepository: {
+              getRolesForUser: mocks.getRolesForUser
+            }
+          }
+        : null
+    };
+  }
 }));
 
 import { updateSession } from "@/lib/supabase/middleware";
 
 describe("server middleware authorization enforcement", () => {
+  const originalNodeEnv = process.env.NODE_ENV;
+
   beforeEach(() => {
     mocks.getCurrentUser.mockReset();
     mocks.getRolesForUser.mockReset();
+    mocks.repositoriesAvailable = true;
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    if (originalNodeEnv) vi.stubEnv("NODE_ENV", originalNodeEnv);
   });
 
   it("keeps public routes accessible without authorization", async () => {
@@ -65,6 +79,36 @@ describe("server middleware authorization enforcement", () => {
       expect(refresh.headers.get("location")).toBeNull();
     }
   );
+
+  it("enforces a valid development preview role on direct requests", async () => {
+    vi.stubEnv("NODE_ENV", "development");
+    authorize("operations-executive");
+    const denied = await request("/settings", "cashier");
+    expect(new URL(requiredLocation(denied)).pathname).toBe("/pos");
+
+    const allowed = await request("/settings", "administrator");
+    expect(allowed.status).toBe(200);
+  });
+
+  it("ignores preview cookies outside development", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    authorize("operations-executive");
+    expect((await request("/dashboard", "cashier")).status).toBe(200);
+  });
+
+  it("rejects unknown preview values without granting permissions", async () => {
+    vi.stubEnv("NODE_ENV", "development");
+    authorize("cashier");
+    const response = await request("/settings", "invented-role");
+    expect(new URL(requiredLocation(response)).pathname).toBe("/pos");
+  });
+
+  it("enforces preview access with the isolated development user when Supabase is absent", async () => {
+    vi.stubEnv("NODE_ENV", "development");
+    mocks.repositoriesAvailable = false;
+    const response = await request("/settings", "cashier");
+    expect(new URL(requiredLocation(response)).pathname).toBe("/pos");
+  });
 
   it.each([
     ["cashier", "/settings", "/pos"],
@@ -123,10 +167,12 @@ function authorize(role: UserRole) {
   mocks.getRolesForUser.mockResolvedValue([role]);
 }
 
-function request(pathname: string) {
-  return updateSession(
-    new NextRequest(`https://fastflow.test${pathname}`)
-  );
+function request(pathname: string, previewRole?: string) {
+  const request = new NextRequest(`https://fastflow.test${pathname}`);
+  if (previewRole) {
+    request.cookies.set("controlos.dev.preview-role", previewRole);
+  }
+  return updateSession(request);
 }
 
 function requiredLocation(response: NextResponse) {

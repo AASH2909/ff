@@ -2,7 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   getCurrentUser: vi.fn(),
-  getRolesForUser: vi.fn()
+  getRolesForUser: vi.fn(),
+  cookieValue: null as string | null
 }));
 
 vi.mock("@/repositories/server", () => ({
@@ -16,6 +17,14 @@ vi.mock("@/repositories/server", () => ({
   }))
 }));
 
+vi.mock("next/headers", () => ({
+  cookies: vi.fn(async () => ({
+    get: vi.fn(() =>
+      mocks.cookieValue === null ? undefined : { value: mocks.cookieValue }
+    )
+  }))
+}));
+
 import { defaultCurrentUser } from "@/lib/auth/current-user";
 import { resolveCurrentAuthorizationUser } from "@/lib/auth/current-user-server";
 
@@ -26,9 +35,11 @@ describe("server current-user authorization resolution", () => {
   beforeEach(() => {
     mocks.getCurrentUser.mockReset();
     mocks.getRolesForUser.mockReset();
+    mocks.cookieValue = null;
   });
 
   afterEach(() => {
+    vi.unstubAllEnvs();
     restoreEnvironment("NEXT_PUBLIC_SUPABASE_URL", originalUrl);
     restoreEnvironment("NEXT_PUBLIC_SUPABASE_ANON_KEY", originalKey);
   });
@@ -67,6 +78,50 @@ describe("server current-user authorization resolution", () => {
     });
     mocks.getRolesForUser.mockResolvedValue([]);
     expect(await resolveCurrentAuthorizationUser()).toBeNull();
+  });
+
+  it("uses the same valid development preview role as middleware", async () => {
+    vi.stubEnv("NODE_ENV", "development");
+    configureSupabase();
+    mocks.cookieValue = "administrator";
+    mocks.getCurrentUser.mockResolvedValue({
+      id: "user-3",
+      email: "cashier@example.test",
+      user_metadata: {}
+    });
+    mocks.getRolesForUser.mockResolvedValue(["cashier"]);
+
+    expect(await resolveCurrentAuthorizationUser()).toMatchObject({
+      role: "administrator",
+      authenticatedRole: "cashier",
+      previewRole: "administrator"
+    });
+  });
+
+  it("ignores unknown and production preview cookie values", async () => {
+    configureSupabase();
+    mocks.getCurrentUser.mockResolvedValue({
+      id: "user-4",
+      email: "cashier@example.test",
+      user_metadata: {}
+    });
+    mocks.getRolesForUser.mockResolvedValue(["cashier"]);
+
+    vi.stubEnv("NODE_ENV", "development");
+    mocks.cookieValue = "invented-role";
+    expect(await resolveCurrentAuthorizationUser()).toEqual({
+      id: "user-4",
+      displayName: "cashier@example.test",
+      role: "cashier"
+    });
+
+    vi.stubEnv("NODE_ENV", "production");
+    mocks.cookieValue = "administrator";
+    expect(await resolveCurrentAuthorizationUser()).toEqual({
+      id: "user-4",
+      displayName: "cashier@example.test",
+      role: "cashier"
+    });
   });
 });
 

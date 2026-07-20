@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { useExecutiveWorkspace } from "@/components/app/executive-workspace-provider";
 import type { ExecutiveWorkspace } from "@/components/app/executive-workspace";
 import { useCurrentAuthorization } from "@/components/app/current-authorization-provider";
+import { DeveloperRolePreview } from "@/components/app/developer-role-preview";
 import {
   defaultCurrentUser,
   type CurrentUser
@@ -33,21 +34,27 @@ export function ExecutiveHeader() {
   const { workspace } = useExecutiveWorkspace();
   const { currentUser } = useCurrentAuthorization();
   return (
-    <ExecutiveHeaderView workspace={workspace} currentUser={currentUser} />
+    <ExecutiveHeaderView
+      workspace={workspace}
+      currentUser={currentUser}
+      developerTools={<DeveloperRolePreview />}
+    />
   );
 }
 
 export function ExecutiveHeaderView({
   workspace,
-  currentUser = defaultCurrentUser
+  currentUser = defaultCurrentUser,
+  developerTools
 }: {
   workspace: ExecutiveWorkspace;
   currentUser?: CurrentUser;
+  developerTools?: ReactNode;
 }) {
   return (
     <header className="border-b bg-background/95 px-4 py-3 sm:px-6 lg:px-8">
       <div className="flex min-w-0 flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-        <div className="flex min-w-0 items-center gap-3 pr-32 md:pr-0">
+        <div className="flex min-w-0 flex-wrap items-center gap-3 pr-32 md:pr-0">
           <div className="grid size-9 shrink-0 place-items-center rounded-md bg-primary/10 text-primary">
             <BriefcaseBusiness className="size-4" aria-hidden="true" />
           </div>
@@ -57,6 +64,7 @@ export function ExecutiveHeaderView({
               {t(getRoleLabelKey(currentUser.role))}
             </p>
           </div>
+          {developerTools}
         </div>
         <div className="grid min-w-0 grid-cols-2 gap-x-4 gap-y-2 text-xs sm:flex sm:flex-wrap sm:items-center">
           <ContextItem
