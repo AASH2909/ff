@@ -7,9 +7,10 @@ import {
   writeExecutiveWorkspace
 } from "@/components/app/executive-workspace";
 import {
-  applyOperationalDemoAction,
-  initialOperationalDemoState
-} from "@/components/app/operational-demo-state";
+  applicationStateReducer,
+  initialApplicationState,
+  selectDashboardState
+} from "@/components/app/application-state";
 import { setActiveLocale, t } from "@/localization";
 
 describe("executive workspace model", () => {
@@ -62,10 +63,9 @@ describe("executive workspace model", () => {
   it("does not alter locale, progressed operational state, or reset defaults", () => {
     setActiveLocale("ru");
     const localizedBefore = t("nav.dashboard");
-    const progressed = applyOperationalDemoAction(
-      initialOperationalDemoState,
-      "complete-rebalance"
-    );
+    const progressed = applicationStateReducer(initialApplicationState, {
+      type: "complete-shift-rebalance"
+    });
     const snapshot = structuredClone(progressed);
 
     updateExecutiveWorkspace(defaultExecutiveWorkspace, {
@@ -75,7 +75,7 @@ describe("executive workspace model", () => {
 
     expect(t("nav.dashboard")).toBe(localizedBefore);
     expect(progressed).toEqual(snapshot);
-    expect(initialOperationalDemoState.controlScore).toBe(64);
+    expect(selectDashboardState(initialApplicationState).controlScore).toBe(64);
     setActiveLocale("en");
   });
 });

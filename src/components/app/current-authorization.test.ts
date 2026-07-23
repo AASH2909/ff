@@ -3,7 +3,10 @@ import {
   defaultCurrentUser,
   resolveDemoCurrentUser
 } from "@/components/app/current-authorization";
-import { applyOperationalDemoAction, initialOperationalDemoState } from "@/components/app/operational-demo-state";
+import {
+  applicationStateReducer,
+  initialApplicationState
+} from "@/components/app/application-state";
 import { setActiveLocale, t } from "@/localization";
 
 describe("current authorization resolution", () => {
@@ -19,10 +22,9 @@ describe("current authorization resolution", () => {
 
   it("preserves role and progressed demo state across locale changes", () => {
     const user = resolveDemoCurrentUser();
-    const progressed = applyOperationalDemoAction(
-      initialOperationalDemoState,
-      "complete-rebalance"
-    );
+    const progressed = applicationStateReducer(initialApplicationState, {
+      type: "complete-shift-rebalance"
+    });
     const snapshot = structuredClone(progressed);
 
     setActiveLocale("ru");

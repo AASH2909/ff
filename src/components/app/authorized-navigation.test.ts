@@ -3,20 +3,14 @@ import {
   createAuthorizedNavigation,
   isNavigationItemActive
 } from "@/components/app/authorized-navigation";
-import type { OperationalDemoState } from "@/components/app/operational-demo-state";
+import type { NavigationBadgeKey } from "@/lib/auth/authorization";
 
 const badges = {
   dashboardAlertCount: 3,
   posQueueCount: 4,
   kitchenOrderCount: 11,
   inventoryAlertCount: 9
-} satisfies Pick<
-  OperationalDemoState,
-  | "dashboardAlertCount"
-  | "posQueueCount"
-  | "kitchenOrderCount"
-  | "inventoryAlertCount"
->;
+} satisfies Readonly<Record<NavigationBadgeKey, number>>;
 
 describe("authorized navigation presentation", () => {
   it("shows only permitted destinations and keeps their synchronized badges", () => {

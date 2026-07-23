@@ -3,14 +3,19 @@
 import Link from "next/link";
 import { Plus, ScanLine } from "lucide-react";
 import { PageHeading } from "@/components/app/page-heading";
-import { OperationalContextBanner, useOperationalDemo } from "@/components/app/operational-demo-state";
+import { OperationalContextBanner } from "@/components/app/operational-context-banner";
+import {
+  useOperationalActions,
+  usePosState
+} from "@/components/app/application-state-provider";
 import { BottomActionBar, BottomActionGroup, PageSection, StatusChip } from "@/components/design-system";
 import { Button, Card, CardContent, CardHeader, CardTitle, Separator } from "@/components/ui";
 import { t } from "@/localization";
 import { useCurrentAuthorization } from "@/components/app/current-authorization-provider";
 
 export default function PosPage() {
-  const { state, completeAction } = useOperationalDemo();
+  const state = usePosState();
+  const { completeRefundReview } = useOperationalActions();
   const { defaultRoute, hasPermission } = useCurrentAuthorization();
   const canCompleteReview =
     hasPermission("pos:operate") &&
@@ -28,12 +33,12 @@ export default function PosPage() {
       <PageSection className="space-y-3 px-4 pb-4 sm:px-6 lg:px-8">
         <OperationalContextBanner
           title={t("pages.pos.currentMission")}
-          value={state.currentMission}
-          detail={state.helperText}
+          value={t(state.missionKey)}
+          detail={t(state.helperKey)}
           tone={state.shiftStatus === "completed" ? "healthy" : "info"}
         />
         <div className="rounded-lg border bg-background/70 p-4 text-sm text-muted-foreground">
-          <p className="font-semibold text-foreground">{t("pages.pos.openedFrom")} {state.openedFrom}</p>
+          <p className="font-semibold text-foreground">{t("pages.pos.openedFrom")} {t(state.openedFromKey)}</p>
           <p className="mt-1">{state.posQueueCount === 0 ? t("pages.pos.queueClear") : t("pages.pos.queueActive")}</p>
         </div>
       </PageSection>
@@ -68,7 +73,7 @@ export default function PosPage() {
         <BottomActionGroup>
           <Button variant="secondary"><ScanLine className="size-4" /> {t("pages.pos.scan")}</Button>
           {canCompleteReview ? (
-            <Button asChild onClick={() => completeAction("complete-refund-review")}>
+            <Button asChild onClick={completeRefundReview}>
               <Link href={hasPermission("dashboard:view") ? "/dashboard" : defaultRoute}>{t("pages.pos.finishReview")}</Link>
             </Button>
           ) : null}

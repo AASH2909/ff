@@ -4,9 +4,10 @@ import { resolve } from "node:path";
 import { dictionaries, type MessageKey } from "@/localization";
 import { createLocaleTranslator } from "@/localization/locale-runtime";
 import {
-  initialOperationalDemoState,
-  applyOperationalDemoAction
-} from "@/components/app/operational-demo-state";
+  applicationStateReducer,
+  initialApplicationState,
+  selectDashboardState
+} from "@/components/app/application-state";
 
 const visibleGroups = {
   navigation: ["nav."],
@@ -78,18 +79,17 @@ describe("Russian localization completeness", () => {
   });
 
   it("does not reset or mutate operational state when translation changes", () => {
-    const progressed = applyOperationalDemoAction(
-      initialOperationalDemoState,
-      "complete-rebalance"
-    );
+    const progressed = applicationStateReducer(initialApplicationState, {
+      type: "complete-shift-rebalance"
+    });
     const snapshot = structuredClone(progressed);
 
     createLocaleTranslator("ru")("demo.handoffMission");
     createLocaleTranslator("en")("demo.handoffMission");
 
     expect(progressed).toEqual(snapshot);
-    expect(progressed.controlScore).toBeGreaterThan(
-      initialOperationalDemoState.controlScore
+    expect(selectDashboardState(progressed).controlScore).toBeGreaterThan(
+      selectDashboardState(initialApplicationState).controlScore
     );
   });
 

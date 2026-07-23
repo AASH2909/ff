@@ -325,4 +325,6 @@ export const en = {
   "demo.reviewComplete": "Service review is complete",
   "demo.reviewDescription": "The refund queue is clear and the team can return to the dashboard for the next move.",
   "demo.returnDashboard": "Return to dashboard"
+  ,"demo.progress": "Demo progress"
+  ,"demo.reset": "Reset demo"
 } as const;

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BarChart3, ChefHat, ClipboardList, LayoutDashboard, Settings, ShoppingCart } from "lucide-react";
-import { useOperationalDemo } from "@/components/app/operational-demo-state";
+import { useNavigationBadges } from "@/components/app/application-state-provider";
 import { useCurrentAuthorization } from "@/components/app/current-authorization-provider";
 import { useSession } from "@/components/app/session-provider";
 import {
@@ -24,9 +24,12 @@ const iconByNavigationId = {
 
 function AppBottomNavigation() {
   const pathname = usePathname();
-  const { state } = useOperationalDemo();
+  const badges = useNavigationBadges();
   const { currentUser } = useSession();
-  const navigationItems = createAuthorizedNavigation(currentUser.effectiveRole, state);
+  const navigationItems = createAuthorizedNavigation(
+    currentUser.effectiveRole,
+    badges
+  );
 
   return (
     <nav className="surface-blur safe-bottom fixed inset-x-0 bottom-0 z-40 border-t px-2 pt-2 md:hidden">
@@ -45,7 +48,7 @@ function AppBottomNavigation() {
               )}
             >
               <Icon className="size-5" aria-hidden="true" />
-              <span className="max-w-full truncate">{t(item.labelKey)}</span>
+              <span className="max-w-full whitespace-normal break-normal text-center leading-tight">{t(item.labelKey)}</span>
               {item.badgeCount > 0 ? (
                 <span className="absolute right-1 top-1 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground">
                   {item.badgeCount}
@@ -61,10 +64,13 @@ function AppBottomNavigation() {
 
 function AppSidebarNavigation() {
   const pathname = usePathname();
-  const { state } = useOperationalDemo();
+  const badges = useNavigationBadges();
   const { currentUser } = useSession();
   const { defaultRoute } = useCurrentAuthorization();
-  const navigationItems = createAuthorizedNavigation(currentUser.effectiveRole, state);
+  const navigationItems = createAuthorizedNavigation(
+    currentUser.effectiveRole,
+    badges
+  );
 
   return (
     <aside className="surface-blur fixed inset-y-0 left-0 z-40 hidden w-64 border-r p-4 md:block">
@@ -88,13 +94,13 @@ function AppSidebarNavigation() {
               key={item.id}
               href={item.path}
               className={cn(
-                "flex h-11 items-center justify-between gap-3 rounded-md px-3 text-sm font-semibold text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground",
+                "flex min-h-11 items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground",
                 active && "bg-primary/10 text-primary"
               )}
             >
               <span className="flex min-w-0 items-center gap-3">
                 <Icon className="size-4 shrink-0" aria-hidden="true" />
-                <span className="truncate">{t(item.labelKey)}</span>
+                <span className="whitespace-normal break-normal">{t(item.labelKey)}</span>
               </span>
               {item.badgeCount > 0 ? (
                 <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">

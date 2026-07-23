@@ -50,8 +50,8 @@ export function ExecutiveHeaderView({
             <BriefcaseBusiness className="size-4" aria-hidden="true" />
           </div>
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold">{session.currentUser.displayName}</p>
-            <p className="truncate text-xs text-muted-foreground">
+            <p className="whitespace-normal break-normal text-sm font-semibold">{session.currentUser.displayName}</p>
+            <p className="whitespace-normal break-normal text-xs text-muted-foreground">
               {t(getRoleLabelKey(session.currentUser.effectiveRole))}
             </p>
           </div>
@@ -95,10 +95,10 @@ function ContextItem({
 }) {
   return (
     <div className="min-w-0">
-      <p className="truncate font-medium text-muted-foreground">{label}</p>
+      <p className="whitespace-normal break-normal font-medium text-muted-foreground">{label}</p>
       <p className="mt-0.5 flex min-w-0 items-center gap-1 font-semibold">
         {icon}
-        <span className="truncate">{value}</span>
+        <span className="whitespace-normal break-normal">{value}</span>
       </p>
     </div>
   );

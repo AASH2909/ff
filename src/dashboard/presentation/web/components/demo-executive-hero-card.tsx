@@ -1,11 +1,11 @@
 import { Activity, Gauge } from "lucide-react";
-import { useOperationalDemo } from "@/components/app/operational-demo-state";
+import { useDashboardState } from "@/components/app/application-state-provider";
 import { StatusChip } from "@/components/design-system";
 import { Card, CardContent, Progress } from "@/components/ui";
 import { t } from "@/localization";
 
 export function DemoExecutiveHeroCard() {
-  const { state } = useOperationalDemo();
+  const state = useDashboardState();
 
   return (
     <Card className="overflow-hidden">
@@ -33,7 +33,7 @@ export function DemoExecutiveHeroCard() {
                 highlight
               />
               <HeroMetric label={t("dashboard.riskLevel")} value={state.inventoryVariance === "healthy" ? t("dashboard.low") : t("dashboard.moderateRisk")} />
-               <HeroMetric label={t("dashboard.dailyDelta")} value={state.controlScore >= 70 ? t("dashboard.demo.dailyDeltaImproved", { delta: 8 }) : t("dashboard.demo.dailyDeltaValue", { delta: 9 })} />
+               <HeroMetric label={t("dashboard.dailyDelta")} value={state.controlScore >= 70 ? t("dashboard.demo.dailyDeltaImproved", { delta: state.controlScoreDelta }) : t("dashboard.demo.dailyDeltaValue", { delta: 9 })} />
             </div>
           </section>
 
@@ -55,7 +55,7 @@ export function DemoExecutiveHeroCard() {
               <Progress value={state.controlScore} />
             </div>
             <div className="mt-4 grid gap-2 sm:grid-cols-3 xl:grid-cols-1">
-               <ScoreMeta label={t("dashboard.dailyDelta")} value={state.controlScore >= 70 ? t("dashboard.demo.dailyDeltaImproved", { delta: 8 }) : t("dashboard.demo.dailyDeltaValue", { delta: 9 })} />
+               <ScoreMeta label={t("dashboard.dailyDelta")} value={state.controlScore >= 70 ? t("dashboard.demo.dailyDeltaImproved", { delta: state.controlScoreDelta }) : t("dashboard.demo.dailyDeltaValue", { delta: 9 })} />
               <ScoreMeta label={t("dashboard.riskLevel")} value={state.inventoryVariance === "healthy" ? t("dashboard.low") : t("dashboard.moderateRisk")} />
               <ScoreMeta label={t("dashboard.lastUpdate")} value={t("dashboard.now")} />
             </div>
@@ -98,7 +98,7 @@ function ScoreMeta({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0 rounded-sm bg-background px-3 py-2">
       <p className="truncate text-xs font-semibold uppercase text-muted-foreground">{label}</p>
-      <p className="mt-1 truncate text-sm font-semibold">{value}</p>
+      <p className="mt-1 whitespace-normal break-normal text-sm font-semibold">{value}</p>
     </div>
   );
 }

@@ -329,4 +329,6 @@ export const ru = {
   ,"demo.reviewComplete": "Обзор сервиса завершён"
   ,"demo.reviewDescription": "Очередь возвратов очищена, команда может вернуться на панель управления."
   ,"demo.returnDashboard": "Вернуться на панель"
+  ,"demo.progress": "Прогресс демонстрации"
+  ,"demo.reset": "Сбросить демонстрацию"
 } satisfies DictionaryShape<typeof en>;
