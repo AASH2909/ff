@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { BarChart3, ChefHat, ClipboardList, LayoutDashboard, Settings, ShoppingCart } from "lucide-react";
 import { useOperationalDemo } from "@/components/app/operational-demo-state";
 import { useCurrentAuthorization } from "@/components/app/current-authorization-provider";
+import { useSession } from "@/components/app/session-provider";
 import {
   createAuthorizedNavigation,
   isNavigationItemActive
@@ -24,8 +25,8 @@ const iconByNavigationId = {
 function AppBottomNavigation() {
   const pathname = usePathname();
   const { state } = useOperationalDemo();
-  const { currentUser } = useCurrentAuthorization();
-  const navigationItems = createAuthorizedNavigation(currentUser.role, state);
+  const { currentUser } = useSession();
+  const navigationItems = createAuthorizedNavigation(currentUser.effectiveRole, state);
 
   return (
     <nav className="surface-blur safe-bottom fixed inset-x-0 bottom-0 z-40 border-t px-2 pt-2 md:hidden">
@@ -61,8 +62,9 @@ function AppBottomNavigation() {
 function AppSidebarNavigation() {
   const pathname = usePathname();
   const { state } = useOperationalDemo();
-  const { currentUser, defaultRoute } = useCurrentAuthorization();
-  const navigationItems = createAuthorizedNavigation(currentUser.role, state);
+  const { currentUser } = useSession();
+  const { defaultRoute } = useCurrentAuthorization();
+  const navigationItems = createAuthorizedNavigation(currentUser.effectiveRole, state);
 
   return (
     <aside className="surface-blur fixed inset-y-0 left-0 z-40 hidden w-64 border-r p-4 md:block">

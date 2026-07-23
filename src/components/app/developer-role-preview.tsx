@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import type { ChangeEvent } from "react";
-import { useCurrentAuthorization } from "@/components/app/current-authorization-provider";
+import { useSession } from "@/components/app/session-provider";
 import {
   getRoleLabelKey,
   isUserRole,
@@ -22,8 +22,8 @@ export const rolePreviewControlClasses =
 export function DeveloperRolePreview() {
   const router = useRouter();
   const pathname = usePathname();
-  const { currentUser } = useCurrentAuthorization();
-  const authenticatedRole = currentUser.authenticatedRole ?? currentUser.role;
+  const { currentUser } = useSession();
+  const authenticatedRole = currentUser.authenticatedRole;
 
   function applyRole(role: UserRole | null) {
     const effectiveRole = role ?? authenticatedRole;
@@ -36,8 +36,8 @@ export function DeveloperRolePreview() {
   return (
     <DeveloperRolePreviewView
       enabled={isDeveloperRolePreviewEnabled()}
-      role={currentUser.role}
-      previewRole={currentUser.previewRole ?? null}
+      role={currentUser.effectiveRole}
+      previewRole={currentUser.previewRole}
       onRoleChange={applyRole}
       onClear={() => applyRole(null)}
     />

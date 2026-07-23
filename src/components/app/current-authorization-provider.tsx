@@ -1,10 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  defaultCurrentUser,
-  type CurrentUser
-} from "@/components/app/current-authorization";
+import { useSession } from "@/components/app/session-provider";
 import {
   getDefaultRouteForRole,
   getNavigationForRole,
@@ -14,7 +11,6 @@ import {
 } from "@/lib/auth/authorization";
 
 type CurrentAuthorizationContextValue = {
-  currentUser: CurrentUser;
   hasPermission: (permission: Permission) => boolean;
   hasAnyPermission: (permissions: readonly Permission[]) => boolean;
   navigation: ReturnType<typeof getNavigationForRole>;
@@ -25,23 +21,22 @@ const CurrentAuthorizationContext =
   React.createContext<CurrentAuthorizationContextValue | null>(null);
 
 export function CurrentAuthorizationProvider({
-  children,
-  currentUser = defaultCurrentUser
+  children
 }: {
   children: React.ReactNode;
-  currentUser?: CurrentUser;
 }) {
+  const { currentUser } = useSession();
+  const role = currentUser.effectiveRole;
   const value = React.useMemo<CurrentAuthorizationContextValue>(
     () => ({
-      currentUser,
       hasPermission: (permission) =>
-        hasPermission(currentUser.role, permission),
+        hasPermission(role, permission),
       hasAnyPermission: (permissions) =>
-        hasAnyPermission(currentUser.role, permissions),
-      navigation: getNavigationForRole(currentUser.role),
-      defaultRoute: getDefaultRouteForRole(currentUser.role)
+        hasAnyPermission(role, permissions),
+      navigation: getNavigationForRole(role),
+      defaultRoute: getDefaultRouteForRole(role)
     }),
-    [currentUser]
+    [role]
   );
 
   return (

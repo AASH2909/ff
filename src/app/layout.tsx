@@ -4,7 +4,6 @@ import { LocaleProvider } from "@/components/app/locale-provider";
 import { LocaleRenderBoundary } from "@/components/app/locale-provider";
 import { LanguageControl } from "@/components/app/language-control";
 import { OperationalDemoProvider } from "@/components/app/operational-demo-state";
-import { ExecutiveWorkspaceProvider } from "@/components/app/executive-workspace-provider";
 
 export const metadata: Metadata = {
   title: "FF",
@@ -27,12 +26,10 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <LocaleProvider>
-          <ExecutiveWorkspaceProvider>
-            <OperationalDemoProvider>
-              <LocaleRenderBoundary>{children}</LocaleRenderBoundary>
-              <LanguageControl />
-            </OperationalDemoProvider>
-          </ExecutiveWorkspaceProvider>
+          <OperationalDemoProvider>
+            <LocaleRenderBoundary>{children}</LocaleRenderBoundary>
+            <LanguageControl />
+          </OperationalDemoProvider>
         </LocaleProvider>
       </body>
     </html>

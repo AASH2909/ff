@@ -1,6 +1,7 @@
 import { isValidElement, type ReactElement, type ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { ExecutiveHeaderView } from "@/components/app/executive-header";
+import { createApplicationSession } from "@/components/app/application-session";
 import {
   defaultExecutiveWorkspace,
   readExecutiveWorkspace,
@@ -8,13 +9,18 @@ import {
   writeExecutiveWorkspace
 } from "@/components/app/executive-workspace";
 import { setActiveLocale } from "@/localization";
-import type { CurrentUser } from "@/components/app/current-authorization";
+import {
+  defaultCurrentUser,
+  type CurrentUser
+} from "@/components/app/current-authorization";
 import type { UserRole } from "@/lib/auth/authorization";
 
 describe("ExecutiveHeaderView", () => {
   it("renders executive identity and workspace context", () => {
     const text = collectText(
-      ExecutiveHeaderView({ workspace: defaultExecutiveWorkspace })
+      ExecutiveHeaderView({
+        session: createApplicationSession(defaultCurrentUser)
+      })
     );
 
     expect(text).toContain("Maya Chen");
@@ -31,8 +37,7 @@ describe("ExecutiveHeaderView", () => {
       role: "operations-executive"
     };
     expect(collectText(ExecutiveHeaderView({
-      workspace: defaultExecutiveWorkspace,
-      currentUser: updatedUser
+      session: createApplicationSession(updatedUser)
     }))).toContain(
       "Alex Morgan"
     );
@@ -53,7 +58,9 @@ describe("ExecutiveHeaderView", () => {
     const reloaded = readExecutiveWorkspace(storage);
 
     setActiveLocale("ru");
-    const text = collectText(ExecutiveHeaderView({ workspace: reloaded }));
+    const text = collectText(ExecutiveHeaderView({
+      session: createApplicationSession(defaultCurrentUser, reloaded)
+    }));
     expect(text).toContain("Maya Chen");
     expect(text).toContain("Операционный руководитель");
     expect(text).toContain("Демо-пространство");
@@ -88,8 +95,7 @@ describe("ExecutiveHeaderView", () => {
       expect(
         collectText(
           ExecutiveHeaderView({
-            workspace: defaultExecutiveWorkspace,
-            currentUser
+            session: createApplicationSession(currentUser)
           })
         )
       ).toContain(english);
@@ -97,8 +103,7 @@ describe("ExecutiveHeaderView", () => {
       expect(
         collectText(
           ExecutiveHeaderView({
-            workspace: defaultExecutiveWorkspace,
-            currentUser
+            session: createApplicationSession(currentUser)
           })
         )
       ).toContain(russian);
